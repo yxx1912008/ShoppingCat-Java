@@ -12,7 +12,7 @@ public interface WebmagicConstant {
     String  CAT_HOST                   = "http://star0393.com/index.php";
 
     //默认开启线程
-    Integer DEFAULT_THREAD             = 5;
+    Integer DEFAULT_THREAD             = 10;
 
     //默认爬虫抓取等待时间
     Integer DEFAULT_WAIT_TIME          = 180000;
