@@ -38,6 +38,7 @@ public class UserInfoMessange {
     //桌位号
     private String                                                                        tableNo;
     //用户的头像地址
+    @SuppressWarnings("unused")
     private String                                                                        iconUrl;
 
     /**
