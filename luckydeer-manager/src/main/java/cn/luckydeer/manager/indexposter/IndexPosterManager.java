@@ -15,7 +15,7 @@ import cn.luckydeer.dao.webmagic.dataobject.CatIndexPosterDo;
 import cn.luckydeer.manager.webmagic.pipeline.CatPipeLine;
 import cn.luckydeer.manager.webmagic.utils.WebMagicUtils;
 import cn.luckydeer.webmagic.constants.WebmagicConstant;
-import cn.luckydeer.webmagic.model.IndexPosterModel;
+import cn.luckydeer.webmagic.task.IndexPosterTask;
 
 /**
  * 
@@ -41,7 +41,7 @@ public class IndexPosterManager {
      * @return
      * @author yuanxx @date 2018年6月22日
      */
-    public List<IndexPosterModel> getIndexPoster() {
+    public List<IndexPosterTask> getIndexPoster() {
         Date date = new Date();
         /**  是否超过 最后更新时间 默认缓存更新时间为每两个小时  */
         if (null == posterCache.get("expiryTime")
@@ -50,13 +50,13 @@ public class IndexPosterManager {
             Date expiryTime = DateUtilSelf.increaseHour(date, 2);
             posterCache.put("expiryTime", expiryTime);
             boolean flag = WebMagicUtils.crawlContent(WebmagicConstant.CAT_HOST,
-                IndexPosterModel.class, catPipeLine);
+                IndexPosterTask.class, catPipeLine);
             if (!flag) {
                 logger.error("首页海报抓取失败");
                 return null;
             }
             List<CatIndexPosterDo> list = catIndexPosterDao.getIndexPoster();
-            List<IndexPosterModel> modelList = new ArrayList<>();
+            List<IndexPosterTask> modelList = new ArrayList<>();
             for (CatIndexPosterDo catIndexPosterDo : list) {
                 if (null != indexPosterConvert(catIndexPosterDo)) {
                     modelList.add(indexPosterConvert(catIndexPosterDo));
@@ -68,7 +68,7 @@ public class IndexPosterManager {
 
         if (null != posterCache.get("value")) {
             @SuppressWarnings("unchecked")
-            List<IndexPosterModel> list = (List<IndexPosterModel>) posterCache.get("value");
+            List<IndexPosterTask> list = (List<IndexPosterTask>) posterCache.get("value");
             return list;
         }
 
@@ -86,10 +86,10 @@ public class IndexPosterManager {
         return catIndexPosterDao.insert(record);
     }
 
-    public IndexPosterModel indexPosterConvert(CatIndexPosterDo indexPosterDo) {
-        IndexPosterModel indexPosterModel = null;
+    public IndexPosterTask indexPosterConvert(CatIndexPosterDo indexPosterDo) {
+        IndexPosterTask indexPosterModel = null;
         if (null != indexPosterDo) {
-            indexPosterModel = new IndexPosterModel();
+            indexPosterModel = new IndexPosterTask();
             indexPosterModel.setImgUrl(indexPosterDo.getImgUrl());
             indexPosterModel.setTargetUrl(indexPosterDo.getTargetUrl());
         }

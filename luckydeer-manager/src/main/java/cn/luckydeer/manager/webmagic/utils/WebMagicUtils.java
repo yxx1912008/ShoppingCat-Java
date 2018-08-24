@@ -18,9 +18,7 @@ import us.codecraft.webmagic.monitor.SpiderMonitor.MonitorSpiderListener;
 import us.codecraft.webmagic.monitor.SpiderStatusMXBean;
 import us.codecraft.webmagic.pipeline.PageModelPipeline;
 import cn.luckydeer.manager.webmagic.monitor.CustomSpiderMonitor;
-import cn.luckydeer.manager.webmagic.pipeline.CatPipeLine;
 import cn.luckydeer.webmagic.constants.WebmagicConstant;
-import cn.luckydeer.webmagic.model.IndexPosterModel;
 
 /**
  * 自写爬虫框架工具类
@@ -87,11 +85,4 @@ public class WebMagicUtils {
         return false;
     }
 
-    public static void main(String[] args) {
-
-        boolean flag = WebMagicUtils.crawlContent(WebmagicConstant.CAT_HOST,
-            IndexPosterModel.class, new CatPipeLine());
-        System.out.println(flag);
-
-    }
 }

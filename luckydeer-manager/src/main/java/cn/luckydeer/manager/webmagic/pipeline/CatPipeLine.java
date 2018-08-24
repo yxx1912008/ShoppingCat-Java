@@ -10,7 +10,7 @@ import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.PageModelPipeline;
 import cn.luckydeer.dao.webmagic.dataobject.CatIndexPosterDo;
 import cn.luckydeer.manager.indexposter.IndexPosterManager;
-import cn.luckydeer.webmagic.model.IndexPosterModel;
+import cn.luckydeer.webmagic.task.IndexPosterTask;
 
 public class CatPipeLine implements PageModelPipeline<Object> {
 
@@ -21,8 +21,8 @@ public class CatPipeLine implements PageModelPipeline<Object> {
     @Override
     public void process(Object obj, Task task) {
         /**  1.判断抓取的对象是否是 指定类型 */
-        if (obj instanceof IndexPosterModel) {
-            IndexPosterModel model = (IndexPosterModel) obj;
+        if (obj instanceof IndexPosterTask) {
+            IndexPosterTask model = (IndexPosterTask) obj;
             CatIndexPosterDo record = new CatIndexPosterDo();
             record.setGmtCreate(new Date());
             record.setImgUrl(model.getImgUrl());

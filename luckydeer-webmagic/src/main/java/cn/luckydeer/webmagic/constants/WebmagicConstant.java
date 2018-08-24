@@ -9,7 +9,7 @@ package cn.luckydeer.webmagic.constants;
 public interface WebmagicConstant {
 
     //购物猫网站网址
-    String  CAT_HOST                   = "http://star0393.com/index.php";
+    String  CAT_HOST                   = "http://cat.luckydeer.cn/index.php";
 
     //默认开启线程
     Integer DEFAULT_THREAD             = 10;

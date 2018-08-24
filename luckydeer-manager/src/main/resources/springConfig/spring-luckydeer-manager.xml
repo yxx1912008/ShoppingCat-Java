@@ -11,6 +11,7 @@
 	<bean id="tokenManager" class="cn.luckydeer.manager.token.TokenManager" />
 	<!-- 首页海报管理 -->
 	<bean id="indexPosterManager" class="cn.luckydeer.manager.indexposter.IndexPosterManager" />
-
+	
+	<bean id="bannerManager" class="cn.luckydeer.manager.banner.BannerManager" />
 
 </beans>

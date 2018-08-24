@@ -15,7 +15,7 @@ import cn.luckydeer.baseaction.annotation.IgnoreAuth;
 import cn.luckydeer.baseaction.basecontroller.BaseController;
 import cn.luckydeer.common.model.ResponseObj;
 import cn.luckydeer.manager.indexposter.IndexPosterManager;
-import cn.luckydeer.webmagic.model.IndexPosterModel;
+import cn.luckydeer.webmagic.task.IndexPosterTask;
 
 @Controller
 @RequestMapping(value = "/wechat/cat/", method = RequestMethod.POST)
@@ -28,7 +28,7 @@ public class CatContentController extends BaseController {
     @RequestMapping(value = "getIndexPoster.wx", produces = { "application/json;charset=UTF-8" })
     @ResponseBody
     public String getIndexPoster(HttpServletRequest request, HttpServletResponse response) {
-        List<IndexPosterModel> list = indexPosterManager.getIndexPoster();
+        List<IndexPosterTask> list = indexPosterManager.getIndexPoster();
         return new ResponseObj(list).toJson(request, response);
     }
 
