@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.luckydeer.dao.webmagic.daoImpl.CatIndexPosterDao" >
+  <resultMap id="BaseResultMap" type="cn.luckydeer.dao.webmagic.dataobject.CatIndexPosterDo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="img_url" property="imgUrl" jdbcType="VARCHAR" />
+    <result column="target_url" property="targetUrl" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, img_url, target_url, gmt_create
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from cat_index_poster
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from cat_index_poster
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.luckydeer.dao.webmagic.dataobject.CatIndexPosterDo" >
+    insert into cat_index_poster (id, img_url, target_url, 
+      gmt_create)
+    values (#{id,jdbcType=INTEGER}, #{imgUrl,jdbcType=VARCHAR}, #{targetUrl,jdbcType=VARCHAR}, 
+      #{gmtCreate,jdbcType=TIMESTAMP})
+  </insert>
+  <!-- 获取海报 -->
+  <select id="getIndexPoster" resultMap="BaseResultMap">
+	  select 
+	   <include refid="Base_Column_List" />
+	   from cat_index_poster
+	   order by gmt_create Desc
+	   limit 5
+  </select>
+</mapper>

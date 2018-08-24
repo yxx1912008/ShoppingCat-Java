@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+	default-autowire="byName">
+
+	<!-- ============================================================================ -->
+	<!-- ============================ DataSource配置 =============================== -->
+	<!-- ============================================================================ -->
+
+	<!-- 数据源 -->
+	<bean id="luckyDeerDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName">
+			<value>${db.luckydeer.mysql.driver}</value>
+		</property>
+		<property name="url">
+			<value>${db.luckydeer.url.prod}</value>
+		</property>
+		<property name="username">
+			<value>${db.luckydeer.username}</value>
+		</property>
+		<property name="password">
+			<value>${db.luckydeer.password}</value>
+		</property>
+		<property name="defaultAutoCommit">
+			<value>${db.luckydeer.defaultAutoCommit}</value>
+		</property>
+		<!-- 同时连接最大数 -->
+		<property name="maxActive">
+			<value>${db.luckydeer.maxActive}</value>
+		</property>
+		<!-- 连接池空闲时保持的最大连接数 -->
+		<property name="maxIdle">
+			<value>${db.luckydeer.maxIdle}</value>
+		</property>
+		<!-- 当没有可用连接是等待最长时间 毫秒 -->
+		<property name="maxWait">
+			<value>${db.luckydeer.maxWait}</value>
+		</property>
+	</bean>
+
+
+	<bean id="luckyDeerSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="luckyDeerDataSource" />
+		<!-- 数据库配置文件路径 -->
+		<property name="configLocation" value="classpath:sqlmap/sqlmap-luckydeer.xml" />
+	</bean>
+
+	<bean id="luckyDeerAbstractDAO" abstract="true">
+		<property name="sqlSessionFactory" ref="luckyDeerSqlSessionFactory" />
+	</bean>
+	<!-- ============================================================================ -->
+	<!-- ================== TransactionTemplate和TransactionManager配置 ============== -->
+	<!-- ============================================================================ -->
+
+	<bean id="luckyDeerTransactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource">
+			<ref bean="luckyDeerDataSource" />
+		</property>
+	</bean>
+
+	<!-- 事物模板 -->
+	<bean id="luckyDeerTransactionTemplate"
+		class="org.springframework.transaction.support.TransactionTemplate">
+		<property name="transactionManager">
+			<ref bean="luckyDeerTransactionManager" />
+		</property>
+	</bean>
+
+</beans>

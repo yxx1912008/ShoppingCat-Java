@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+  <display-name>acaomei-websocket</display-name>
+  
+	<!-- 静态文件直接由应用服务器容器处理不用springMVC处理 -->
+	<servlet-mapping>
+		<servlet-name>default</servlet-name>
+		<url-pattern>*.jpg</url-pattern>
+		<url-pattern>*.jpeg</url-pattern>
+		<url-pattern>*.png</url-pattern>
+		<url-pattern>*.gif</url-pattern>
+		<url-pattern>*.js</url-pattern>
+		<url-pattern>*.css</url-pattern>
+		<url-pattern>*.swf</url-pattern>
+		<url-pattern>*.apk</url-pattern>
+		<url-pattern>*.mp3</url-pattern>
+		<url-pattern>*.mp4</url-pattern>
+		<url-pattern>*.ico</url-pattern>
+		<url-pattern>*.pdf</url-pattern>
+		<url-pattern>*.html</url-pattern>
+		<url-pattern>*.htm</url-pattern>
+		<url-pattern>*.vm</url-pattern>
+		<url-pattern>*.doc</url-pattern>
+		<url-pattern>*.docx</url-pattern>
+		<url-pattern>*.xls</url-pattern>
+		<url-pattern>*.xlsx</url-pattern>
+		<url-pattern>*.ppt</url-pattern>
+		<url-pattern>*.pptx</url-pattern>
+		<url-pattern>*.txt</url-pattern>
+	    <!-- 多图片上传直访跨域xml-->
+		<url-pattern>*.xml</url-pattern>
+	</servlet-mapping>
+  
+  <context-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>
+		   classpath*:/springXml/spring-*.xml
+	  </param-value>
+  </context-param>
+  
+  <filter>
+    <filter-name>encodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+  
+  <filter-mapping>
+    <filter-name>encodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <servlet>
+    <servlet-name>acaomeiWebsocket</servlet-name>
+    <servlet-class>
+           org.springframework.web.servlet.DispatcherServlet
+        </servlet-class>
+    <init-param>
+      <param-name>log4j</param-name>
+      <param-value>classpath*:log4j.xml</param-value>
+    </init-param>
+    <load-on-startup>0</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>acaomeiWebsocket</servlet-name>
+    <url-pattern>/</url-pattern>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  
+  <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
+  
+  <distributable/>
+</web-app>

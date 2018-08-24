@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+	default-autowire="byName">
+
+	<!-- 分布式缓存 -->
+	<bean id="customerMemcached" class="net.spy.memcached.spring.MemcachedClientFactoryBean">
+		<!-- value="host1:11211,host2:11212" -->
+		<property name="servers"
+			value="${customer.cached.ip}:${customer.cached.port}" />
+		<property name="protocol">
+			<value type="net.spy.memcached.ConnectionFactoryBuilder.Protocol">BINARY</value>
+		</property>
+		<!-- 对象和字节数组之间的转换接口;解码的线程池，默认线程最多为10 -->
+		<property name="transcoder">
+			<bean class="net.spy.memcached.transcoders.SerializingTranscoder">
+				<!-- value超过多少kb开始压缩存储阀值 -->
+				<property name="compressionThreshold" value="1024" />
+			</bean>
+		</property>
+
+		<!-- 操作超时时间是1秒，如果不设置的话，默认是 DEFAULT_OPERATION_TIMEOUT，即2.5秒 -->
+		<property name="opTimeout" value="1000" />
+		<!-- 设置超时次数上限是1998次，默认是DEFAULT_MAX_TIMEOUTEXCEPTION_THRESHOLD，即998次 -->
+		<property name="timeoutExceptionThreshold" value="1998" />
+		<!-- 设置哈希算法(见net.spy.memcached.HashAlgorithm的值) -->
+		<property name="hashAlg">
+			<value type="net.spy.memcached.DefaultHashAlgorithm">KETAMA_HASH</value>
+		</property>
+		<!-- 设置定位器类型(ARRAY_MOD,CONSISTENT(指定的)),默认是ARRAY_MOD -->
+		<property name="locatorType">
+			<value type="net.spy.memcached.ConnectionFactoryBuilder.Locator">CONSISTENT</value>
+		</property>
+		<!-- node失效的模式 : 设置故障模式(Cancel 取消，Redistribute 重新分配节点失效后移动到下一个有效的节点[默认模式]，Retry 
+			重试失效节点 直至恢复) -->
+		<property name="failureMode">
+			<value type="net.spy.memcached.FailureMode">Redistribute</value>
+		</property>
+		<!-- 如果你想使用Nagle算法，设置为true -->
+		<property name="useNagleAlgorithm" value="false" />
+	</bean>
+
+	<!-- 业务分布式cache -->
+	<bean id="statisticsMemcached" class="net.spy.memcached.spring.MemcachedClientFactoryBean">
+		<!-- value="host1:11211,host2:11212" -->
+		<property name="servers"
+			value="${statistics.cached.ip}:${statistics.cached.port}" />
+		<property name="protocol">
+			<value type="net.spy.memcached.ConnectionFactoryBuilder.Protocol">BINARY</value>
+		</property>
+		<!-- 对象和字节数组之间的转换接口;解码的线程池，默认线程最多为10 -->
+		<property name="transcoder">
+			<bean class="net.spy.memcached.transcoders.SerializingTranscoder">
+				<!-- value超过多少kb开始压缩存储阀值 -->
+				<property name="compressionThreshold" value="1024" />
+			</bean>
+		</property>
+
+		<!-- 操作超时时间是1秒，如果不设置的话，默认是 DEFAULT_OPERATION_TIMEOUT，即2.5秒 -->
+		<property name="opTimeout" value="1000" />
+		<!-- 设置超时次数上限是1998次，默认是DEFAULT_MAX_TIMEOUTEXCEPTION_THRESHOLD，即998次 -->
+		<property name="timeoutExceptionThreshold" value="1998" />
+		<!-- 设置哈希算法(见net.spy.memcached.HashAlgorithm的值) -->
+		<property name="hashAlg">
+			<value type="net.spy.memcached.DefaultHashAlgorithm">KETAMA_HASH</value>
+		</property>
+		<!-- 设置定位器类型(ARRAY_MOD,CONSISTENT(指定的)),默认是ARRAY_MOD -->
+		<property name="locatorType">
+			<value type="net.spy.memcached.ConnectionFactoryBuilder.Locator">CONSISTENT</value>
+		</property>
+		<!-- node失效的模式 : 设置故障模式(Cancel 取消，Redistribute 重新分配节点失效后移动到下一个有效的节点[默认模式]，Retry 
+			重试失效节点 直至恢复) -->
+		<property name="failureMode">
+			<value type="net.spy.memcached.FailureMode">Redistribute</value>
+		</property>
+		<!-- 如果你想使用Nagle算法，设置为true -->
+		<property name="useNagleAlgorithm" value="false" />
+	</bean>
+
+	<bean id="distributedCached" class="cn.luckydeer.memcached.api.impl.DistributedCachedImpl">
+		<property name="cachedMap">
+			<map>
+				<entry key="USER_SESSION">
+					<ref bean="customerMemcached" />
+				</entry>
+				<entry key="STATISTICS">
+					<ref bean="statisticsMemcached" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<!-- cache --><!-- <bean id="customerMemcached" class="net.spy.memcached.MemcachedClient"> 
+		<constructor-arg ref="customerInetSocketAddress"/> </bean> <bean id="customerInetSocketAddress" 
+		class="java.net.InetSocketAddress"> <constructor-arg value='${customer.cached.ip}' 
+		type="java.lang.String"/> <constructor-arg value='${customer.cached.port}' 
+		type="int"/> </bean> -->
+</beans>

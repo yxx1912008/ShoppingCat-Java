@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<!-- Log4j配置文件 /windata/ tomcat的同级目录。 -->
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<!-- [公共Appender] 默认 -->
+	<appender name="DEFAULT-APPENDER" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="/windata/logs/luckydeer/other-info.log" />
+		<!-- 设置是否在重新启动服务时，在原有日志的基础添加新日志 -->
+		<param name="append" value="true" />
+		<param name="encoding" value="UTF-8" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %-5p (%c:%L)- %m%n" />
+		</layout>
+	</appender>
+
+	<!-- [公共Appender] 汇总错误 所有的错误汇总 -->
+	<appender name="ERROR-APPENDER" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="/windata/logs/luckydeer/common-error.log" />
+		<param name="append" value="true" />
+		<param name="encoding" value="UTF-8" />
+		<param name="threshold" value="error" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %-5p (%c:%L)- %m%n" />
+		</layout>
+	</appender>
+
+
+	<!-- 日志后续有需要，可以继续添加 -->
+	<!-- 日志很重要，一定要梳理清楚才能方便调试 -->
+	<!-- SOA-LOG层日志文件 -->
+	<!-- rabbit-mq日志文件 -->
+	<!-- 只监控测试日志 -->
+	<appender name="APPENDER-TEST-LOGGER" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="/windata/logs/luckydeer/test.log" />
+		<param name="append" value="true" />
+		<param name="encoding" value="UTF-8" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %-5p (%c:%L)- %m%n" />
+		</layout>
+	</appender>
+
+	<!-- dal监控日志文件 -->
+	<appender name="APPENDER-LUCKYDEER-DAL-MONITOR" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="/windata/logs/luckydeer/dal-monitor.log" />
+		<param name="append" value="true" />
+		<param name="encoding" value="UTF-8" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %-5p (%c:%L)- %m%n" />
+		</layout>
+	</appender>
+
+	<!-- Dao层日志监控 -->
+	<appender name="APPENDER-LUCKYDEER-DAO" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="/windata/logs/luckydeer/luckydeer-dao.log" />
+		<param name="append" value="true" />
+		<param name="encoding" value="UTF-8" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %-5p (%c:%L)- %m%n" />
+		</layout>
+	</appender>
+	<appender name="APPENDER-LUCKYDEER-SYSTEM" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="/windata/logs/luckydeer/luckydeer-system.log" />
+		<param name="append" value="true" />
+		<param name="encoding" value="UTF-8" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %-5p (%c:%L)- %m%n" />
+		</layout>
+	</appender>
+
+	<!-- Manager层 监控日志文件 -->
+	<appender name="APPENDER-LUCKYDEER-DAL-MANAGER" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="/windata/logs/luckydeer/dal-manager.log" />
+		<param name="append" value="true" />
+		<param name="encoding" value="UTF-8" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %-5p (%c:%L)- %m%n" />
+		</layout>
+	</appender>
+
+	<!-- session 日志 -->
+	<appender name="APPENDER-LUCKYDEER-SESSION" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="/windata/logs/luckydeer/luckydeer-session.log" />
+		<param name="append" value="true" />
+		<param name="encoding" value="UTF-8" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %-5p (%c:%L)- %m%n" />
+		</layout>
+	</appender>
+
+	<!-- WEBMAGIC监控 -->
+	<appender name="APPENDER-LUCKYDEER-WEBMAGIC" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="/windata/logs/luckydeer/luckydeer-webmagic.log" />
+		<param name="append" value="true" />
+		<param name="encoding" value="UTF-8" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %-5p (%c:%L)- %m%n" />
+		</layout>
+	</appender>
+
+	<!-- Memcached监控 -->
+	<appender name="APPENDER-LUCKYDEER-MEMCACHED" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="/windata/logs/luckydeer/luckydeer-memcached.log" />
+		<param name="append" value="true" />
+		<param name="encoding" value="UTF-8" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %-5p (%c:%L)- %m%n" />
+		</layout>
+	</appender>
+
+	<!-- Memcached日志 -->
+	<logger name="LUCKYDEER-MEMCACHED-LOG" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="APPENDER-LUCKYDEER-MEMCACHED" />
+	</logger>
+
+
+	<!-- WebMagic监控日志 -->
+	<logger name="LUCKYDEER-WEBMAGIC-LOG" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="APPENDER-LUCKYDEER-WEBMAGIC" />
+	</logger>
+
+	<!-- Session日志 -->
+	<logger name="LUCKYDEER-SESSION-LOG" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="APPENDER-LUCKYDEER-MEMCACHED" />
+	</logger>
+
+	<!-- 系统日志 -->
+	<logger name="LUCKYDEER-SYSTEM-LOG" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="APPENDER-LUCKYDEER-SYSTEM" />
+	</logger>
+
+	<!-- 控制层日志 -->
+	<logger name="LUCKYDEER-CONTROLLER-LOG" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="DEFAULT-APPENDER" />
+	</logger>
+
+	<!-- 管理层日志 -->
+	<logger name="LUCKYDEER-MANAGER-LOG" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="DEFAULT-APPENDER" />
+	</logger>
+
+	<!-- 其他日志都会往这里打印 -->
+	<root>
+		<level value="INFO" />
+		<appender-ref ref="DEFAULT-APPENDER" />
+		<appender-ref ref="ERROR-APPENDER" />
+		<!-- <appender-ref ref="CONSOLE" /> -->
+	</root>
+
+</log4j:configuration>
+

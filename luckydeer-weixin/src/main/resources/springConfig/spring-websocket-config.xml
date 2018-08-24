@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd  
+                        http://www.springframework.org/schema/context  
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd  
+                        http://www.springframework.org/schema/mvc  
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+                        http://www.springframework.org/schema/websocket
+                        http://www.springframework.org/schema/websocket/spring-websocket-4.0.xsd">
+
+
+
+	<!-- 用户信息管理类 -->
+	<!-- <bean id="chatWebsocketManager" class="cn.luckydeer.weixin.controller.websocket.manager.ChatWebsocketManager" 
+		/> -->
+
+	<!--装载 WebSocketHandler bean -->
+	<!-- <bean id="chatWebsocketHandler" class="cn.luckydeer.weixin.controller.websocket.handler.ChatWebsocketHandler" 
+		/> -->
+
+	<!--将 WebSocketHandler 映射到对应路由 -->
+	<!-- <websocket:handlers> <websocket:mapping handler="chatWebsocketHandler" 
+		path="/chat.do" /> </websocket:handlers> -->
+
+</beans>
