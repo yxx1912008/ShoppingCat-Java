@@ -1,5 +1,8 @@
 package cn.luckydeer.manager.banner;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import cn.luckydeer.manager.api.BannerApi;
 
 /**
@@ -17,7 +20,15 @@ public class BannerManager {
      * @author yuanxx @date 2018年8月24日
      */
     public String getBanner() {
+
         return BannerApi.getBanner();
     }
 
+    public static void main(String[] args) throws Exception {
+
+        Document doc = Jsoup.connect("http://star0393.com/index.php?r=l&kw=小笼包").get();
+
+        System.out.println(doc.toString());
+
+    }
 }
