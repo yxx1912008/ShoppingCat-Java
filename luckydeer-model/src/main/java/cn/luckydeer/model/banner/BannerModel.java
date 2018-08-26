@@ -7,18 +7,18 @@ public class BannerModel implements Serializable {
     /**  */
     private static final long serialVersionUID = -5139607738820224013L;
 
-    //链接地址
-    private String            bannerUrl;
+    //商品ID
+    private String            goodId;
 
     //图片地址
     private String            bannerImg;
 
-    public String getBannerUrl() {
-        return bannerUrl;
+    public String getGoodId() {
+        return goodId;
     }
 
-    public void setBannerUrl(String bannerUrl) {
-        this.bannerUrl = bannerUrl;
+    public void setGoodId(String goodId) {
+        this.goodId = goodId;
     }
 
     public String getBannerImg() {

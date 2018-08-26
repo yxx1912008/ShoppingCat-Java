@@ -3,7 +3,8 @@ package cn.luckydeer.manager.banner;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import cn.luckydeer.manager.api.BannerApi;
+import cn.luckydeer.common.model.ResponseObj;
+import cn.luckydeer.manager.api.WebCrawlApi;
 
 /**
  * 首页海报管理
@@ -19,9 +20,8 @@ public class BannerManager {
      * @return
      * @author yuanxx @date 2018年8月24日
      */
-    public String getBanner() {
-
-        return BannerApi.getBanner();
+    public ResponseObj getBanner() {
+        return new ResponseObj(WebCrawlApi.getBanner());
     }
 
     public static void main(String[] args) throws Exception {

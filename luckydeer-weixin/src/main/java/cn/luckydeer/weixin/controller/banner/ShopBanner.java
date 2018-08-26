@@ -35,8 +35,7 @@ public class ShopBanner {
     @RequestMapping(value = "/getIndexBanner.do", produces = { "application/json;charset=UTF-8" })
     @ResponseBody
     public String getIndexBanner(HttpServletRequest request, HttpServletResponse response) {
-
-        return bannerManager.getBanner();
+         return bannerManager.getBanner().toJson(request, response);
     }
 
 }
