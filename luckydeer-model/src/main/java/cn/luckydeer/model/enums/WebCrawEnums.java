@@ -9,7 +9,7 @@ package cn.luckydeer.model.enums;
  */
 public enum WebCrawEnums {
 
-    BANNER("BANNER", "首页海报"), QIANGGOU("QIANGGOU", "正在抢购");
+    BANNER("BANNER", "首页海报"), QIANGGOU("QIANGGOU", "正在抢购"), NINE("NINE", "9.9包邮");
 
     private String code;
 
