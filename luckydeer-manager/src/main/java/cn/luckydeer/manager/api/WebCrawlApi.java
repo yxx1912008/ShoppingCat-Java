@@ -10,11 +10,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -22,10 +18,11 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSON;
+
 import cn.luckydeer.common.constants.base.BaseConstants;
 import cn.luckydeer.common.utils.DateUtilSelf;
 import cn.luckydeer.common.utils.cache.CacheData;
-import cn.luckydeer.common.utils.http.HttpClientSend;
 import cn.luckydeer.model.banner.BannerModel;
 import cn.luckydeer.model.enums.WebCrawEnums;
 
@@ -41,6 +38,8 @@ public class WebCrawlApi {
 
     /** 网页抓取缓存 固定时间更新 避免多次抓取 节约资源  */
     private static Map<String, CacheData> webCrawCache = new HashMap<String, CacheData>();
+
+    private static String                 cac_id;
 
     /**
      * 
@@ -143,7 +142,6 @@ public class WebCrawlApi {
             Pattern pattern = Pattern.compile(rexString);
             Matcher m = pattern.matcher(doc.toString());
             if (m.find()) {
-                System.out.println(m.group(1).trim());
                 updateCache(m.group(1).trim(), key);
                 return m.group(1).trim();
             }
@@ -154,10 +152,71 @@ public class WebCrawlApi {
         }
     }
 
+    /**
+     * 
+     * 注解：获取9.9包邮商品列表
+     * @param page
+     * @return
+     * @author yuanxx @date 2018年8月27日
+     */
+    public static String getNine(String page) {
+
+        //拼接请求参数
+        StringBuilder builder = new StringBuilder(BaseConstants.MAIN_BASE_URL);
+        builder.append("r=nine/listajax&n_id=58&page=").append(page).append("&cac_id=");
+        if (StringUtils.isNotBlank(cac_id)) {
+            builder.append(cac_id);
+        }
+        String url = builder.toString();
+        try {
+            Document doc = Jsoup.connect(url).get();
+            String result = doc.text();
+            if (StringUtils.equals("1", page)) {
+                String str = JSON.parseObject(result).getJSONObject("data").getString("cac_id");
+                cac_id = str;
+            }
+            return result;
+        } catch (IOException e) {
+            logger.error("读取9.9包邮商品列表失败", e);
+            return "读取9.9包邮商品列表失败";
+        }
+    }
+
+    /**
+     * 
+     * 注解：获取实时疯抢榜
+     * @param catId
+     * @return
+     * @author yuanxx @date 2018年8月27日
+     */
+    public static String getRealTime(Integer catId) {
+
+        if (null == catId) {
+            catId = 0;
+        }
+        String key = WebCrawEnums.REAL_TIME.getCode() + catId;
+        boolean flag = getCacheTimeOut(key);
+
+        if (flag) {
+            CacheData cache = webCrawCache.get(key);
+            return (String) cache.getData();
+        }
+        String url = BaseConstants.MAIN_BASE_URL + "r=realtime/wapajax&cid=" + catId;
+        try {
+            Document doc = Jsoup.connect(url).timeout(BaseConstants.DEFAULT_TIME_OUT).get();
+            String result = doc.text();
+            updateCache(result, key);
+            return result;
+        } catch (IOException e) {
+            logger.error("获取实时疯抢榜失败", e);
+            return "获取实时疯抢榜失败";
+        }
+
+    }
+
     public static void main(String[] args) throws Exception {
 
-        String url = "http://star0393.com/index.php?r=nine/listajax&n_id=58&page=4&cac_id=cXVlcnlUaGVuRmV0Y2g7NDszNjg4NDgxMDg0OkJWRVVlVFRLUzF1aGVYUW52RkhvQkE7MzY4ODA3MTg1NDpKTmxzUWI5SVJwcVVqMkV6YzRXd2hBOzM2ODg5ODc1NjQ6M3BudXQ4azhUdHEtVlZIcU9qZUwzdzszNjg4OTcwMjc5OjR0b09PZUxJUlNHaTcyNmducFpPekE7MDs%3D";
-        Document res = Jsoup.connect(url).get();
-        System.out.println(res.text());
+        String result = WebCrawlApi.getRealTime(1);
+        System.out.println(result);
     }
 }

@@ -12,6 +12,6 @@
 	<!-- 首页海报管理 -->
 	<bean id="indexPosterManager" class="cn.luckydeer.manager.indexposter.IndexPosterManager" />
 	
-	<bean id="bannerManager" class="cn.luckydeer.manager.banner.BannerManager" />
+	<bean id="catManager" class="cn.luckydeer.manager.cat.CatManager" />
 
 </beans>
