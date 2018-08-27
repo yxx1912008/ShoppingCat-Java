@@ -20,4 +20,7 @@ public interface BaseConstants {
     //默认缓存更新时间
     int    DEFAULT_CACHE_TIME = 120;
 
+    //大淘客Api平台host
+    String DTK_MAIN_URL       = "http://api.dataoke.com/index.php?";
+
 }

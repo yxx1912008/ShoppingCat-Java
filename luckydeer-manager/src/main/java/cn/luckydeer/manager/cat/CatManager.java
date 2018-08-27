@@ -74,4 +74,26 @@ public class CatManager {
         return WebCrawlApi.getRealTime(catId);
     }
 
+    /**
+     * 
+     * 注解：搜索商品信息
+     * @param keyWords
+     * @return
+     * @author yuanxx @date 2018年8月27日
+     */
+    public String searchGood(String keyWords) {
+        return WebCrawlApi.searchGood(keyWords);
+    }
+
+    /**
+     * 
+     * 注解：获取商品详情
+     * @param goodId
+     * @return
+     * @author yuanxx @date 2018年8月27日
+     */
+    public String getGoodDetail(String goodId) {
+        return WebCrawlApi.getGoodDetail(goodId);
+    }
+
 }

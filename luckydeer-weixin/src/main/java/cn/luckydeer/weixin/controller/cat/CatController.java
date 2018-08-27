@@ -91,4 +91,28 @@ public class CatController {
         return catManager.getRealTime(catId);
     }
 
+    /**
+     * 
+     * 注解：搜索商品
+     * @param keyWords
+     * @param request
+     * @param response
+     * @return
+     * @author yuanxx @date 2018年8月27日
+     */
+    @RequestMapping(value = "/searchGood.do", produces = { "application/json;charset=UTF-8" })
+    @ResponseBody
+    public String searchGood(String keyWords, HttpServletRequest request,
+                             HttpServletResponse response) {
+
+        return catManager.searchGood(keyWords);
+    }
+
+    @RequestMapping(value = "/getGoodDetail.do", produces = { "application/json;charset=UTF-8" })
+    @ResponseBody
+    public String getGoodDetail(String goodId, HttpServletRequest request,
+                                HttpServletResponse response) {
+        return catManager.getGoodDetail(goodId);
+    }
+
 }

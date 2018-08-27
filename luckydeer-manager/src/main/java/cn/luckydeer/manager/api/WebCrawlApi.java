@@ -18,13 +18,13 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alibaba.fastjson.JSON;
-
 import cn.luckydeer.common.constants.base.BaseConstants;
 import cn.luckydeer.common.utils.DateUtilSelf;
 import cn.luckydeer.common.utils.cache.CacheData;
 import cn.luckydeer.model.banner.BannerModel;
 import cn.luckydeer.model.enums.WebCrawEnums;
+
+import com.alibaba.fastjson.JSON;
 
 /**
  * 
@@ -211,12 +211,60 @@ public class WebCrawlApi {
             logger.error("获取实时疯抢榜失败", e);
             return "获取实时疯抢榜失败";
         }
-
     }
 
-    public static void main(String[] args) throws Exception {
+    /**
+     * 
+     * 注解：搜索 全网优惠券商品
+     * @param type
+     * @param keyWords
+     * @return
+     * @author yuanxx @date 2018年8月27日
+     */
+    public static String searchGood(String keyWords) {
 
-        String result = WebCrawlApi.getRealTime(1);
-        System.out.println(result);
+        StringBuilder builder = new StringBuilder(BaseConstants.MAIN_BASE_URL);
+        builder.append("r=index%2Fsearch&s_type=1&kw=");
+        builder.append(keyWords);
+        try {
+            String url = builder.toString();
+            Document doc = Jsoup.connect(url).timeout(BaseConstants.DEFAULT_TIME_OUT).get();
+            //正则匹配规则
+            String regex = "dtk_data=(.*?);";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher m = pattern.matcher(doc.html());
+            if (m.find()) {
+                return m.group(1).trim();
+            }
+            logger.error("搜索结果转换失败");
+            return null;
+        } catch (IOException e) {
+            logger.error("搜索商品失败", e);
+            return null;
+        }
+    }
+
+    /**
+     * 
+     * 注解：获取商品详情
+     * @param goodId
+     * @return
+     * @author yuanxx @date 2018年8月27日
+     */
+    public static String getGoodDetail(String goodId) {
+
+        StringBuilder builder = new StringBuilder(BaseConstants.DTK_MAIN_URL);
+        builder.append("r=port/index&appkey=f0z3ez7qoh&v=2&id=");
+        builder.append(goodId);
+        String url = builder.toString();
+        Document doc;
+        try {
+            doc = Jsoup.connect(url).ignoreContentType(true)
+                .timeout(BaseConstants.DEFAULT_TIME_OUT).post();
+            return doc.text();
+        } catch (IOException e) {
+            logger.error("获取商品详细信息失败", e);
+            return null;
+        }
     }
 }
