@@ -115,4 +115,25 @@ public class CatController {
         return catManager.getGoodDetail(goodId);
     }
 
+    /**
+     * 
+     * 注解：获取商品复制码
+     * @param goodId
+     * @param request
+     * @param response
+     * @return
+     * @author yuanxx @date 2018年9月5日
+     */
+    @RequestMapping(value = "/getGoodCodeText.do", produces = { "application/json;charset=UTF-8" })
+    @ResponseBody
+    public String getGoodCodeText(String goodId, HttpServletRequest request,
+                                  HttpServletResponse response) {
+
+        if (StringUtils.isBlank(goodId)) {
+            return new ResponseObj(ViewShowEnums.ERROR_FAILED.getStatus(), "商品ID不能为空").toJson(
+                request, response);
+        }
+        String codeText = catManager.getGoodCodeText(goodId);
+        return new ResponseObj(codeText).toJson(request, response);
+    }
 }

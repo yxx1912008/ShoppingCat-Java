@@ -96,4 +96,15 @@ public class CatManager {
         return WebCrawlApi.getGoodDetail(goodId);
     }
 
+    /**
+     * 
+     * 注解：根据商品ID 获取商品 购买码
+     * @param goodId
+     * @return
+     * @author yuanxx @date 2018年9月5日
+     */
+    public String getGoodCodeText(String goodId) {
+        return WebCrawlApi.getGoodCodeText(goodId);
+    }
+
 }

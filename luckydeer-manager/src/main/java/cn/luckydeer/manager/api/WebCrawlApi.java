@@ -267,4 +267,36 @@ public class WebCrawlApi {
             return null;
         }
     }
+
+    /**
+     * 
+     * 注解：
+     * @param goodId
+     * @return
+     * @author yuanxx @date 2018年9月5日
+     */
+    public static String getGoodCodeText(String goodId) {
+
+        if (StringUtils.isBlank(goodId)) {
+            return null;
+        }
+        StringBuilder builder = new StringBuilder(BaseConstants.MAIN_BASE_URL);
+        builder.append("r=p/d&id=").append(goodId);
+        String url = builder.toString();
+        Document doc;
+        try {
+            doc = Jsoup.connect(url).timeout(BaseConstants.DEFAULT_TIME_OUT).get();
+            Element element = doc.getElementById("codeText");
+            return element.text();
+        } catch (IOException e) {
+            logger.error("获取商品购买码失败", e);
+            return null;
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        System.out.println(WebCrawlApi.getGoodCodeText("16221650"));
+
+    }
 }
