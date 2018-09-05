@@ -270,7 +270,7 @@ public class WebCrawlApi {
 
     /**
      * 
-     * 注解：
+     * 注解：获取商品 复制码
      * @param goodId
      * @return
      * @author yuanxx @date 2018年9月5日
