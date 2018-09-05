@@ -3,10 +3,10 @@ package cn.luckydeer.manager.api;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,7 +37,7 @@ public class WebCrawlApi {
     private static Logger                 logger       = LoggerFactory.getLogger(WebCrawlApi.class);
 
     /** 网页抓取缓存 固定时间更新 避免多次抓取 节约资源  */
-    private static Map<String, CacheData> webCrawCache = new HashMap<String, CacheData>();
+    private static Map<String, CacheData> webCrawCache = new ConcurrentHashMap<String, CacheData>();
 
     private static String                 cac_id;
 
