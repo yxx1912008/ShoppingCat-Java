@@ -107,4 +107,25 @@ public class CatManager {
         return WebCrawlApi.getGoodCodeText(goodId);
     }
 
+    /**
+     * 
+     * 注解：获取领券直播商品列表
+     * @param page
+     * @return
+     * @author yuanxx @date 2018年9月6日
+     */
+    public String getTicketLive(String page) {
+        return WebCrawlApi.getTicketLive(page);
+    }
+
+    /**
+     * 
+     * 注解：获取正在抢商品列表
+     * @return
+     * @author yuanxx @date 2018年9月6日
+     */
+    public String getCurrentQiang() {
+        return WebCrawlApi.getCurrentQiang();
+    }
+
 }

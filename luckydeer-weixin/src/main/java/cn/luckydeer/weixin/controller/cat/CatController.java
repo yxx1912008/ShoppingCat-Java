@@ -69,8 +69,7 @@ public class CatController {
     public String getNine(String page, HttpServletRequest request, HttpServletResponse response) {
 
         if (StringUtils.isBlank(page)) {
-            return new ResponseObj(ViewShowEnums.ERROR_FAILED.getStatus(), "请求页码不能为空").toJson(
-                request, response);
+            page = "1";
         }
         return catManager.getNine(page);
     }
@@ -136,4 +135,40 @@ public class CatController {
         String codeText = catManager.getGoodCodeText(goodId);
         return new ResponseObj(codeText).toJson(request, response);
     }
+
+    /**
+     * 
+     * 注解：获取领券直播商品
+     * @param page
+     * @param request
+     * @param response
+     * @return
+     * @author yuanxx @date 2018年9月6日
+     */
+    @RequestMapping(value = "/getTicketLive.do", produces = { "application/json;charset=UTF-8" })
+    @ResponseBody
+    public String getTicketLive(String page, HttpServletRequest request,
+                                HttpServletResponse response) {
+
+        if (StringUtils.isBlank(page)) {
+            page = "1";
+        }
+        return catManager.getTicketLive(page);
+    }
+
+    /**
+     * 
+     * 注解：获取正在抢商品列表
+     * @param request
+     * @param response
+     * @return
+     * @author yuanxx @date 2018年9月6日
+     */
+    @RequestMapping(value = "/getCurrentQiang.do", produces = { "application/json;charset=UTF-8" })
+    @ResponseBody
+    public String getCurrentQiang(HttpServletRequest request, HttpServletResponse response) {
+
+        return catManager.getCurrentQiang();
+    }
+
 }

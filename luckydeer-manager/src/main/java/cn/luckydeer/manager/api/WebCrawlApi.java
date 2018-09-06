@@ -39,7 +39,9 @@ public class WebCrawlApi {
     /** 网页抓取缓存 固定时间更新 避免多次抓取 节约资源  */
     private static Map<String, CacheData> webCrawCache = new ConcurrentHashMap<String, CacheData>();
 
-    private static String                 cac_id;
+    private static String                 nine_cac_id;                                              //9.9包邮 
+
+    private static String                 live_cac_id;                                              //领券直播
 
     /**
      * 
@@ -164,8 +166,8 @@ public class WebCrawlApi {
         //拼接请求参数
         StringBuilder builder = new StringBuilder(BaseConstants.MAIN_BASE_URL);
         builder.append("r=nine/listajax&n_id=58&page=").append(page).append("&cac_id=");
-        if (StringUtils.isNotBlank(cac_id)) {
-            builder.append(cac_id);
+        if (StringUtils.isNotBlank(nine_cac_id)) {
+            builder.append(nine_cac_id);
         }
         String url = builder.toString();
         try {
@@ -173,7 +175,7 @@ public class WebCrawlApi {
             String result = doc.text();
             if (StringUtils.equals("1", page)) {
                 String str = JSON.parseObject(result).getJSONObject("data").getString("cac_id");
-                cac_id = str;
+                nine_cac_id = str;
             }
             return result;
         } catch (IOException e) {
@@ -294,9 +296,81 @@ public class WebCrawlApi {
         }
     }
 
+    /**
+     * 
+     * 注解：获取领券直播商品列表
+     * @param page
+     * @return
+     * @author yuanxx @date 2018年9月6日
+     */
+    public static String getTicketLive(String page) {
+
+        //拼接请求参数
+        StringBuilder builder = new StringBuilder(BaseConstants.MAIN_BASE_URL);
+        builder.append("r=index/ajaxnew&page=").append(page).append("&cac_id=");
+        if (StringUtils.isNotBlank(live_cac_id)) {
+            builder.append(live_cac_id);
+        }
+        String url = builder.toString();
+        try {
+            Document doc = Jsoup.connect(url).get();
+            String result = doc.text();
+            if (StringUtils.equals("1", page)) {
+                String str = JSON.parseObject(result).getJSONObject("data").getString("cac_id");
+                live_cac_id = str;
+            }
+            return result;
+        } catch (IOException e) {
+            logger.error("读取领券直播商品列表失败", e);
+            return "读取领券直播商品列表失败";
+        }
+    }
+
+    /**
+     * 
+     * 注解：获取正在抢商品列表
+     * @return
+     * @author yuanxx @date 2018年9月6日
+     */
+    public static String getCurrentQiang() {
+
+        String key = WebCrawEnums.NEW_QIANG.getCode();
+        boolean flag = getCacheTimeOut(key);
+        if (flag) {
+            CacheData cache = webCrawCache.get(key);
+            return (String) cache.getData();
+        }
+        Document doc;
+        try {
+            doc = Jsoup.connect(BaseConstants.MAIN_BASE_URL + "r=index/wap").get();
+            String rexString = "indexContentNav = (.*?)];";
+            Pattern pattern = Pattern.compile(rexString);
+            Matcher m = pattern.matcher(doc.toString());
+            if (m.find()) {
+                updateCache(m.group(1).trim() + "]", key);
+                return m.group(1).trim() + "]";
+            }
+            return null;
+        } catch (IOException e) {
+            logger.error("获取正在抢购商品信息失败", e);
+            return null;
+        }
+
+    }
+
     public static void main(String[] args) throws Exception {
 
-        System.out.println(WebCrawlApi.getGoodCodeText("16221650"));
+        long start = System.currentTimeMillis();
+
+        System.out.println(WebCrawlApi.getCurrentQiang());
+        long end = System.currentTimeMillis();
+        System.out.println(end - start);
+
+        start = System.currentTimeMillis();
+
+        System.out.println(WebCrawlApi.getCurrentQiang());
+        end = System.currentTimeMillis();
+        System.out.println(end - start);
 
     }
 }
