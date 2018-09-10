@@ -282,7 +282,7 @@ public class WebCrawlApi {
         if (StringUtils.isBlank(goodId)) {
             return null;
         }
-        StringBuilder builder = new StringBuilder(BaseConstants.MAIN_BASE_URL);
+        StringBuilder builder = new StringBuilder(BaseConstants.IMPORT_BASE_URL);
         builder.append("r=p/d&id=").append(goodId);
         String url = builder.toString();
         Document doc;

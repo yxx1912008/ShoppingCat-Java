@@ -8,8 +8,16 @@ package cn.luckydeer.common.constants.base;
  */
 public interface BaseConstants {
 
-    //购物猫主站链接地址
-    String MAIN_BASE_URL      = "http://star0393.com/index.php?";
+    /**
+     * 主站地址 用于 采集 商品信息 ，不建议采用自己的商品网站
+     * 会给自己的服务器造成压力
+     * 所以 次要信息从其它人网站抓取
+     * 关键商品信息 还是用自己的 ，因为需要商品码 
+     */
+    String MAIN_BASE_URL      = "http://www.haowuzi.net/index.php?";
+
+    //关键站点根地址
+    String IMPORT_BASE_URL    = "http://star0393.com/index.php?";
 
     //默认请求超时时间
     int    DEFAULT_TIME_OUT   = 3000;
