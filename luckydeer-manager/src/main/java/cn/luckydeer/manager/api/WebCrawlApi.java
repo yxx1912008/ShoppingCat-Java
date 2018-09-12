@@ -367,8 +367,17 @@ public class WebCrawlApi {
                             it = goods.iterator();
                             while (it.hasNext()) {
                                 JSONObject object2 = (JSONObject) it.next();
+                                BigDecimal xiaoliang = object2.getBigDecimal("xiaoliang");
                                 BigDecimal yuanjia = object2.getBigDecimal("yuanjia");
                                 BigDecimal quanJine = object2.getBigDecimal("quan_jine");
+
+                                if (xiaoliang.compareTo(new BigDecimal("10000")) > 0) {
+                                    object2.put("xiaoliang", xiaoliang.divide(new BigDecimal(
+                                        "10000"), 2, BigDecimal.ROUND_HALF_UP)+"万件");
+                                }else{
+                                    object2.put("xiaoliang", xiaoliang+"件");
+                                }
+
                                 object2.put("nowPrice",
                                     yuanjia.subtract(quanJine)
                                         .setScale(2, BigDecimal.ROUND_HALF_UP));
