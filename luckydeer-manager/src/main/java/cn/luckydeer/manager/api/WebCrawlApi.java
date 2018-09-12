@@ -367,15 +367,17 @@ public class WebCrawlApi {
                             it = goods.iterator();
                             while (it.hasNext()) {
                                 JSONObject object2 = (JSONObject) it.next();
-                                BigDecimal xiaoliang = object2.getBigDecimal("xiaoliang");
+                                BigDecimal quanOver = object2.getBigDecimal("quan_over");
                                 BigDecimal yuanjia = object2.getBigDecimal("yuanjia");
                                 BigDecimal quanJine = object2.getBigDecimal("quan_jine");
 
-                                if (xiaoliang.compareTo(new BigDecimal("10000")) > 0) {
-                                    object2.put("xiaoliang", xiaoliang.divide(new BigDecimal(
-                                        "10000"), 2, BigDecimal.ROUND_HALF_UP)+"万件");
-                                }else{
-                                    object2.put("xiaoliang", xiaoliang+"件");
+                                if (quanOver.compareTo(new BigDecimal("10000")) >= 0) {
+                                    object2.put(
+                                        "quan_over",
+                                        quanOver.divide(new BigDecimal("10000"), 2,
+                                            BigDecimal.ROUND_HALF_UP) + "万件");
+                                } else {
+                                    object2.put("quan_over", quanOver + "件");
                                 }
 
                                 object2.put("nowPrice",
@@ -402,6 +404,9 @@ public class WebCrawlApi {
     public static void main(String[] args) throws Exception {
 
         long start = System.currentTimeMillis();
+
+        BigDecimal quanOver = new BigDecimal("500");
+        System.out.println(quanOver.compareTo(new BigDecimal("10000")));
 
         System.out.println(WebCrawlApi.getCurrentQiang());
         long end = System.currentTimeMillis();
