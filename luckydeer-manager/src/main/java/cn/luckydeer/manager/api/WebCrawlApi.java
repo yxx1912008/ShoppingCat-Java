@@ -1,6 +1,7 @@
 package cn.luckydeer.manager.api;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -25,6 +26,8 @@ import cn.luckydeer.model.banner.BannerModel;
 import cn.luckydeer.model.enums.WebCrawEnums;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * 
@@ -347,11 +350,40 @@ public class WebCrawlApi {
             Pattern pattern = Pattern.compile(rexString);
             Matcher m = pattern.matcher(doc.toString());
             if (m.find()) {
-                updateCache(m.group(1).trim() + "]", key);
-                return m.group(1).trim() + "]";
+                String resultString = m.group(1).trim() + "]";
+
+                if (StringUtils.isNotBlank(resultString)) {
+
+                    JSONArray list = JSONArray.parseArray(resultString);
+                    JSONArray resultList = new JSONArray();
+                    Iterator<Object> it = list.iterator();
+
+                    while (it.hasNext()) {
+                        JSONObject object = (JSONObject) it.next();
+                        if (StringUtils.equals("indexWillBring", object.getString("type"))) {
+                            JSONArray goods = object.getJSONObject("data").getJSONObject("config")
+                                .getJSONArray("list");
+
+                            it = goods.iterator();
+                            while (it.hasNext()) {
+                                JSONObject object2 = (JSONObject) it.next();
+                                BigDecimal yuanjia = object2.getBigDecimal("yuanjia");
+                                BigDecimal quanJine = object2.getBigDecimal("quan_jine");
+                                object2.put("nowPrice",
+                                    yuanjia.subtract(quanJine)
+                                        .setScale(2, BigDecimal.ROUND_HALF_UP));
+                                resultList.add(object2);
+                            }
+                            updateCache(resultList.toString(), key);
+                            return resultList.toString();
+                        }
+                    }
+                }
+
+                return null;
             }
             return null;
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("获取正在抢购商品信息失败", e);
             return null;
         }
