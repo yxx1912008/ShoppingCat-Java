@@ -375,9 +375,9 @@ public class WebCrawlApi {
                                     object2.put(
                                         "quan_over",
                                         quanOver.divide(new BigDecimal("10000"), 2,
-                                            BigDecimal.ROUND_HALF_UP) + "万件");
+                                            BigDecimal.ROUND_HALF_UP) + "万");
                                 } else {
-                                    object2.put("quan_over", quanOver + "件");
+                                    object2.put("quan_over", quanOver);
                                 }
 
                                 object2.put("nowPrice",
