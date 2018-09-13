@@ -13,7 +13,7 @@ public enum WebCrawEnums {
     QIANGGOU("QIANGGOU", "正在抢购"),
     NINE("NINE", "9.9包邮"),
     REAL_TIME("REAL_TIME","实时疯抢榜"),
-    NEW_QIANG("NEW_QIANG","新版抢购")
+    NEW_QIANG("NEW_QIANG","新版抢购"),
     ;
 
     private String code;

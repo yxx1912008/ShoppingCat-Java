@@ -275,6 +275,33 @@ public class WebCrawlApi {
 
     /**
      * 
+     * 注解：获取商品详情 新版接口 
+     * 功能更全面 此前接口暂时废弃
+     * @param goodId
+     * @return
+     * @author yuanxx @date 2018年9月13日
+     */
+    public static String getGoodDetailNew(String goodId) {
+
+        Document doc;
+        try {
+            doc = Jsoup.connect(BaseConstants.IMPORT_BASE_URL + "r=p/d&id=" + goodId).get();
+            String rexString = "goodsItem = (.*?);";
+            Pattern pattern = Pattern.compile(rexString);
+            Matcher m = pattern.matcher(doc.toString());
+            if (m.find()) {
+                return m.group(1).trim();
+            }
+            return null;
+        } catch (IOException e) {
+            logger.error("获取商品详情失败", e);
+            return null;
+        }
+
+    }
+
+    /**
+     * 
      * 注解：获取商品 复制码
      * @param goodId
      * @return
@@ -357,6 +384,7 @@ public class WebCrawlApi {
                     JSONArray list = JSONArray.parseArray(resultString);
                     JSONArray resultList = new JSONArray();
                     Iterator<Object> it = list.iterator();
+                    System.out.println(list.toJSONString());
 
                     while (it.hasNext()) {
                         JSONObject object = (JSONObject) it.next();
@@ -417,6 +445,9 @@ public class WebCrawlApi {
         System.out.println(WebCrawlApi.getCurrentQiang());
         end = System.currentTimeMillis();
         System.out.println(end - start);
+
+        String resultString = WebCrawlApi.getGoodDetailNew("16332723");
+        System.out.println(resultString);
 
     }
 }

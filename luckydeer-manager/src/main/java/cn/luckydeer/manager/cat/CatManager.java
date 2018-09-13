@@ -93,7 +93,7 @@ public class CatManager {
      * @author yuanxx @date 2018年8月27日
      */
     public String getGoodDetail(String goodId) {
-        return WebCrawlApi.getGoodDetail(goodId);
+        return WebCrawlApi.getGoodDetailNew(goodId);
     }
 
     /**
