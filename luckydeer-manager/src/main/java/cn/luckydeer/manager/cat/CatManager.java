@@ -128,4 +128,15 @@ public class CatManager {
         return WebCrawlApi.getCurrentQiang();
     }
 
+    /**
+     * 
+     * 注解：通过商品真实ID获取商品的主图信息
+     * @param realGoodId
+     * @return
+     * @author yuanxx @date 2018年9月13日
+     */
+    public String getGoodDescImg(String realGoodId) {
+        return WebCrawlApi.getGoodDescImg(realGoodId);
+    }
+
 }

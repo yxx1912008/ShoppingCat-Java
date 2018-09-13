@@ -171,4 +171,25 @@ public class CatController {
         return catManager.getCurrentQiang();
     }
 
+    /**
+     * 
+     * 注解：通过商品真实ID获取商品主图信息
+     * @param realGoodId
+     * @param request
+     * @param response
+     * @return
+     * @author yuanxx @date 2018年9月13日
+     */
+    @RequestMapping(value = "/getGoodDescImg.do", produces = { "application/json;charset=UTF-8" })
+    @ResponseBody
+    public String getGoodDescImg(String realGoodId, HttpServletRequest request,
+                                 HttpServletResponse response) {
+
+        if (StringUtils.isBlank(realGoodId)) {
+            return new ResponseObj(ViewShowEnums.ERROR_FAILED.getStatus(), "商品真实ID不能为空").toJson(
+                request, response);
+        }
+        return catManager.getGoodDescImg(realGoodId);
+    }
+
 }

@@ -429,25 +429,53 @@ public class WebCrawlApi {
 
     }
 
+    /**
+     * 
+     * 注解：通过商品的真实Id(淘宝内部Id)获取商品的主图信息
+     * @param realGoodId
+     * @return
+     * @author yuanxx @date 2018年9月13日
+     */
+    public static String getGoodDescImg(String realGoodId) {
+
+        JSONObject param = new JSONObject();
+        param.put("item_num_id", realGoodId);
+
+        //拼接请求参数
+        StringBuilder builder = new StringBuilder(BaseConstants.TAOBAO_FOOD_IMG);
+        builder.append("data=").append(param.toJSONString()).append("&type=json");
+        String url = builder.toString();
+        try {
+            Document doc = Jsoup.connect(url).ignoreContentType(true).get();
+            String result = doc.text();
+            return result;
+        } catch (IOException e) {
+            logger.error("读取淘宝商品主图信息失败", e);
+            System.out.println(e);
+            return "读取淘宝商品主图信息失败";
+        }
+
+    }
+
     public static void main(String[] args) throws Exception {
 
-        long start = System.currentTimeMillis();
+        /*   long start = System.currentTimeMillis();
 
-        BigDecimal quanOver = new BigDecimal("500");
-        System.out.println(quanOver.compareTo(new BigDecimal("10000")));
+           BigDecimal quanOver = new BigDecimal("500");
+           System.out.println(quanOver.compareTo(new BigDecimal("10000")));
 
-        System.out.println(WebCrawlApi.getCurrentQiang());
-        long end = System.currentTimeMillis();
-        System.out.println(end - start);
+           System.out.println(WebCrawlApi.getCurrentQiang());
+           long end = System.currentTimeMillis();
+           System.out.println(end - start);
 
-        start = System.currentTimeMillis();
+           start = System.currentTimeMillis();
 
-        System.out.println(WebCrawlApi.getCurrentQiang());
-        end = System.currentTimeMillis();
-        System.out.println(end - start);
+           System.out.println(WebCrawlApi.getCurrentQiang());
+           end = System.currentTimeMillis();
+           System.out.println(end - start);*/
 
-        String resultString = WebCrawlApi.getGoodDetailNew("16332723");
+        String realGoodId = "41653176063";
+        String resultString = WebCrawlApi.getGoodDescImg(realGoodId);
         System.out.println(resultString);
-
     }
 }
