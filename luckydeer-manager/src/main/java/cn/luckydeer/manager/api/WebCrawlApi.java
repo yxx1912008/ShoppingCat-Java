@@ -286,11 +286,18 @@ public class WebCrawlApi {
         Document doc;
         try {
             doc = Jsoup.connect(BaseConstants.IMPORT_BASE_URL + "r=p/d&id=" + goodId).get();
+            Elements elements = doc.getElementsByClass("info col-mar");
+            Element element = elements.get(0);
+            String shopIcon = element.getElementsByTag("img").attr("data-original");//店铺图标
+            String shopName = element.getElementsByTag("h3").text();//店铺名称
             String rexString = "goodsItem = (.*?);";
             Pattern pattern = Pattern.compile(rexString);
             Matcher m = pattern.matcher(doc.toString());
             if (m.find()) {
-                return m.group(1).trim();
+                JSONObject jsonObject = JSON.parseObject(m.group(1).trim());
+                jsonObject.put("shopName", shopName);
+                jsonObject.put("shopIcon", shopIcon);
+                return jsonObject.toJSONString();
             }
             return null;
         } catch (IOException e) {
@@ -474,8 +481,9 @@ public class WebCrawlApi {
            end = System.currentTimeMillis();
            System.out.println(end - start);*/
 
-        String realGoodId = "41653176063";
-        String resultString = WebCrawlApi.getGoodDescImg(realGoodId);
-        System.out.println(resultString);
+        String realGoodId = "16332723";
+        String result = WebCrawlApi.getGoodDetailNew(realGoodId);
+        System.out.println(result);
+
     }
 }

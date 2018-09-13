@@ -111,6 +111,7 @@ public class CatController {
     @ResponseBody
     public String getGoodDetail(String goodId, HttpServletRequest request,
                                 HttpServletResponse response) {
+
         return catManager.getGoodDetail(goodId);
     }
 
