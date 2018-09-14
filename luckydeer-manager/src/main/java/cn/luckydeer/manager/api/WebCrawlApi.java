@@ -380,53 +380,40 @@ public class WebCrawlApi {
         Document doc;
         try {
             doc = Jsoup.connect(BaseConstants.MAIN_BASE_URL + "r=index/wap").get();
-            String rexString = "indexContentNav = (.*?)];";
+
+            //使用正则匹配 （非贪婪模式）
+            String rexString = "indexWillBring\",\"data\":(.*?),\"mta_name\"";
             Pattern pattern = Pattern.compile(rexString);
-            Matcher m = pattern.matcher(doc.toString());
+            Matcher m = pattern.matcher(doc.html());
+
             if (m.find()) {
-                String resultString = m.group(1).trim() + "]";
-
+                //直接通过正则表达式 提取 每日必买栏目，相比于用循环 ，这个速度更快 ，但是有局限性
+                String resultString = m.group(1).trim();
                 if (StringUtils.isNotBlank(resultString)) {
-
-                    JSONArray list = JSONArray.parseArray(resultString);
+                    JSONArray willBringList = JSONObject.parseObject(resultString)
+                        .getJSONObject("config").getJSONArray("list");
+                    Iterator<Object> it = willBringList.iterator();
                     JSONArray resultList = new JSONArray();
-                    Iterator<Object> it = list.iterator();
-                    System.out.println(list.toJSONString());
-
                     while (it.hasNext()) {
-                        JSONObject object = (JSONObject) it.next();
-                        if (StringUtils.equals("indexWillBring", object.getString("type"))) {
-                            JSONArray goods = object.getJSONObject("data").getJSONObject("config")
-                                .getJSONArray("list");
-
-                            it = goods.iterator();
-                            while (it.hasNext()) {
-                                JSONObject object2 = (JSONObject) it.next();
-                                BigDecimal quanOver = object2.getBigDecimal("quan_over");
-                                BigDecimal yuanjia = object2.getBigDecimal("yuanjia");
-                                BigDecimal quanJine = object2.getBigDecimal("quan_jine");
-
-                                if (quanOver.compareTo(new BigDecimal("10000")) >= 0) {
-                                    object2.put(
-                                        "quan_over",
-                                        quanOver.divide(new BigDecimal("10000"), 2,
-                                            BigDecimal.ROUND_HALF_UP) + "万");
-                                } else {
-                                    object2.put("quan_over", quanOver);
-                                }
-
-                                object2.put("nowPrice",
-                                    yuanjia.subtract(quanJine)
-                                        .setScale(2, BigDecimal.ROUND_HALF_UP));
-                                resultList.add(object2);
-                            }
-                            updateCache(resultList.toString(), key);
-                            return resultList.toString();
+                        JSONObject goodInfo = (JSONObject) it.next();
+                        BigDecimal quanOver = goodInfo.getBigDecimal("quan_over");
+                        BigDecimal yuanjia = goodInfo.getBigDecimal("yuanjia");
+                        BigDecimal quanJine = goodInfo.getBigDecimal("quan_jine");
+                        if (quanOver.compareTo(new BigDecimal("10000")) >= 0) {
+                            goodInfo.put(
+                                "quan_over",
+                                quanOver.divide(new BigDecimal("10000"), 2,
+                                    BigDecimal.ROUND_HALF_UP) + "万");
+                        } else {
+                            goodInfo.put("quan_over", quanOver);
                         }
+                        goodInfo.put("nowPrice",
+                            yuanjia.subtract(quanJine).setScale(2, BigDecimal.ROUND_HALF_UP));
+                        resultList.add(goodInfo);
                     }
+                    updateCache(resultList.toString(), key);
+                    return resultList.toString();
                 }
-
-                return null;
             }
             return null;
         } catch (Exception e) {
@@ -466,24 +453,18 @@ public class WebCrawlApi {
 
     public static void main(String[] args) throws Exception {
 
-        /*   long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
+        System.out.println(WebCrawlApi.getCurrentQiang());
+        long end = System.currentTimeMillis();
+        System.out.println(end - start);
+        start = System.currentTimeMillis();
+        System.out.println(WebCrawlApi.getCurrentQiang());
+        end = System.currentTimeMillis();
+        System.out.println(end - start);
 
-           BigDecimal quanOver = new BigDecimal("500");
-           System.out.println(quanOver.compareTo(new BigDecimal("10000")));
-
-           System.out.println(WebCrawlApi.getCurrentQiang());
-           long end = System.currentTimeMillis();
-           System.out.println(end - start);
-
-           start = System.currentTimeMillis();
-
-           System.out.println(WebCrawlApi.getCurrentQiang());
-           end = System.currentTimeMillis();
-           System.out.println(end - start);*/
-
-        String realGoodId = "16332723";
-        String result = WebCrawlApi.getGoodDetailNew(realGoodId);
-        System.out.println(result);
+        /* String realGoodId = "16332723";
+         String result = WebCrawlApi.getGoodDetailNew(realGoodId);
+         System.out.println(result);*/
 
     }
 }
