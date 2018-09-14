@@ -81,6 +81,7 @@ public class WebCrawlApi {
                 model.setGoodId(goodId);
                 list.add(model);
             }
+
             updateCache(list, key);
             return list;
         } catch (Exception e) {
