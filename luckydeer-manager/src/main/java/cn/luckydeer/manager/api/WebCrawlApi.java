@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -351,8 +352,8 @@ public class WebCrawlApi {
         }
         String url = builder.toString();
         try {
-            Document doc = Jsoup.connect(url).get();
-            String result = doc.text();
+            Response doc = Jsoup.connect(url).timeout(BaseConstants.DEFAULT_TIME_OUT).execute();
+            String result = doc.body();
             if (StringUtils.equals("1", page)) {
                 String str = JSON.parseObject(result).getJSONObject("data").getString("cac_id");
                 live_cac_id = str;
