@@ -195,7 +195,7 @@ public class CatController {
 
     /**
      * 
-     * 注解：获取商品真实信息
+     * 注解：根据商品真实（即淘宝内部ID）获取商品信息
      * @param realGoodId
      * @param request
      * @param response
