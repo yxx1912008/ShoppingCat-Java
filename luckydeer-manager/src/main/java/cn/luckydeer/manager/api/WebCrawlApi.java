@@ -311,6 +311,31 @@ public class WebCrawlApi {
 
     /**
      * 
+     * 注解：通过商品真实ID获取商品的信息
+     * @param realGoodId
+     * @return
+     * @author yuanxx @date 2018年9月17日
+     */
+    public static String getGoodDetailByRealId(String realGoodId) {
+        Document doc;
+        try {
+            doc = Jsoup.connect(
+                BaseConstants.IMPORT_BASE_URL + "r=p/d&id=" + realGoodId + "&type=3").get();
+            String rexString = "goodsItem = (.*?);";
+            Pattern pattern = Pattern.compile(rexString);
+            Matcher m = pattern.matcher(doc.toString());
+            if (m.find()) {
+                return m.group(1).trim();
+            }
+            return null;
+        } catch (IOException e) {
+            logger.error("获取商品详情失败", e);
+            return null;
+        }
+    }
+
+    /**
+     * 
      * 注解：获取商品 复制码
      * @param goodId
      * @return
@@ -456,17 +481,13 @@ public class WebCrawlApi {
     public static void main(String[] args) throws Exception {
 
         long start = System.currentTimeMillis();
-        System.out.println(WebCrawlApi.getCurrentQiang());
+        String realGoodId = "45044239606";
+        System.out.println(WebCrawlApi.getGoodDetailByRealId(realGoodId));
         long end = System.currentTimeMillis();
         System.out.println(end - start);
         start = System.currentTimeMillis();
-        System.out.println(WebCrawlApi.getCurrentQiang());
+        System.out.println(WebCrawlApi.getGoodDetailByRealId(realGoodId));
         end = System.currentTimeMillis();
         System.out.println(end - start);
-
-        /* String realGoodId = "16332723";
-         String result = WebCrawlApi.getGoodDetailNew(realGoodId);
-         System.out.println(result);*/
-
     }
 }
