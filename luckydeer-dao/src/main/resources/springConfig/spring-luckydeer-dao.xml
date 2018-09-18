@@ -21,5 +21,9 @@
 			value="cn.luckydeer.dao.webmagic.daoImpl.CatIndexPosterDao." />
 	</bean>
 
+	<!-- 购物猫 过审状态开关 -->
+	<bean id="wxAppStatusDao" class="cn.luckydeer.dao.cat.daoImpl.WxAppStatusDao"
+		parent="luckyDeerAbstractDAO" />
+
 
 </beans>

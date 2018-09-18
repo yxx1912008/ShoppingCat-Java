@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cn.luckydeer.common.model.ResponseObj;
+import cn.luckydeer.dao.cat.daoInterface.IWxAppStatusDao;
+import cn.luckydeer.dao.cat.dataobject.WxAppStatusDo;
 import cn.luckydeer.manager.api.WebCrawlApi;
 import cn.luckydeer.model.banner.BannerModel;
 
@@ -18,7 +20,9 @@ import cn.luckydeer.model.banner.BannerModel;
  */
 public class CatManager {
 
-    Logger logger = LoggerFactory.getLogger("LUCKYDEER-MANAGER-LOG");
+    Logger                  logger = LoggerFactory.getLogger("LUCKYDEER-MANAGER-LOG");
+
+    private IWxAppStatusDao wxAppStatusDao;
 
     /**
      * 
@@ -148,6 +152,21 @@ public class CatManager {
      */
     public String getGoodDetailByRealId(String realGoodId) {
         return WebCrawlApi.getGoodDetailByRealId(realGoodId);
+    }
+
+    /**
+     * 
+     * 注解：查询微信小程序状态
+     * @param versionId
+     * @return
+     * @author yuanxx @date 2018年9月18日
+     */
+    public WxAppStatusDo getWxAppStatus(String versionId) {
+        return wxAppStatusDao.selectByPrimaryKey(versionId);
+    }
+
+    public void setWxAppStatusDao(IWxAppStatusDao wxAppStatusDao) {
+        this.wxAppStatusDao = wxAppStatusDao;
     }
 
 }
