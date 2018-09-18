@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.luckydeer.common.enums.view.ViewShowEnums;
 import cn.luckydeer.common.model.ResponseObj;
+import cn.luckydeer.dao.cat.dataobject.WxAppStatusDo;
 import cn.luckydeer.manager.cat.CatManager;
 
 /**
@@ -214,4 +215,21 @@ public class CatController {
         return catManager.getGoodDetailByRealId(realGoodId);
     }
 
+    
+    /**
+     * 
+     * 注解：获取微信小程序状态值
+     * @param versionId
+     * @param request
+     * @param response
+     * @return
+     * @author yuanxx @date 2018年9月18日
+     */
+    @RequestMapping(value = "/getWxAppStatus.do", produces = { "application/json;charset=UTF-8" })
+    @ResponseBody
+    public String  getWxAppStatus(String versionId,HttpServletRequest request,HttpServletResponse response) {
+        WxAppStatusDo info = catManager.getWxAppStatus(versionId);
+        return new ResponseObj(info).toJson(request, response);
+    }
+    
 }
