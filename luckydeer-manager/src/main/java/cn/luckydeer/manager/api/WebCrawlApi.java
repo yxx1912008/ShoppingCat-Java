@@ -371,6 +371,9 @@ public class WebCrawlApi {
 
         //拼接请求参数
         StringBuilder builder = new StringBuilder(BaseConstants.MAIN_BASE_URL);
+        if (StringUtils.equals("1", page)) {
+            live_cac_id = "";
+        }
         builder.append("r=index/ajaxnew&page=").append(page).append("&cac_id=");
         if (StringUtils.isNotBlank(live_cac_id)) {
             builder.append(live_cac_id);
