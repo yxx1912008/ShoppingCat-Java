@@ -111,6 +111,7 @@ public class CatController {
     @ResponseBody
     public String getGoodDetail(String goodId, HttpServletRequest request,
                                 HttpServletResponse response) {
+
         return catManager.getGoodDetail(goodId);
     }
 
@@ -169,6 +170,48 @@ public class CatController {
     public String getCurrentQiang(HttpServletRequest request, HttpServletResponse response) {
 
         return catManager.getCurrentQiang();
+    }
+
+    /**
+     * 
+     * 注解：通过商品真实ID获取商品主图信息
+     * @param realGoodId
+     * @param request
+     * @param response
+     * @return
+     * @author yuanxx @date 2018年9月13日
+     */
+    @RequestMapping(value = "/getGoodDescImg.do", produces = { "application/json;charset=UTF-8" })
+    @ResponseBody
+    public String getGoodDescImg(String realGoodId, HttpServletRequest request,
+                                 HttpServletResponse response) {
+
+        if (StringUtils.isBlank(realGoodId)) {
+            return new ResponseObj(ViewShowEnums.ERROR_FAILED.getStatus(), "商品真实ID不能为空").toJson(
+                request, response);
+        }
+        return catManager.getGoodDescImg(realGoodId);
+    }
+
+    /**
+     * 
+     * 注解：根据商品真实（即淘宝内部ID）获取商品信息
+     * @param realGoodId
+     * @param request
+     * @param response
+     * @return
+     * @author yuanxx @date 2018年9月17日
+     */
+    @RequestMapping(value = "/getGoodDetailByRealId.do", produces = { "application/json;charset=UTF-8" })
+    @ResponseBody
+    public String getGoodDetailByRealId(String realGoodId, HttpServletRequest request,
+                                        HttpServletResponse response) {
+
+        if (StringUtils.isBlank(realGoodId)) {
+            return new ResponseObj(ViewShowEnums.ERROR_FAILED.getStatus(), "商品真实Id不能为空").toJson(
+                request, response);
+        }
+        return catManager.getGoodDetailByRealId(realGoodId);
     }
 
 }

@@ -12,6 +12,11 @@ import java.util.concurrent.Executors;
  */
 public class ExecutorServiceUtils {
 
+    //     prod 4核cpu  
+    //     如果是CPU（计算）密集型应用，则线程池大小设置为N+1
+    //     如果是IO（网络）密集型应用，则线程池大小设置为2N+1
+    private final static int       DEFAULT_THREAD_NUM = 9;
+
     /**
      * 公共线程池(不能被关闭，自动回收)
      */
@@ -33,7 +38,7 @@ public class ExecutorServiceUtils {
         if (null == executorService) {
             synchronized (ExecutorServiceUtils.class) {
                 if (null == executorService) {
-                    executorService = Executors.newCachedThreadPool();
+                    executorService = Executors.newFixedThreadPool(DEFAULT_THREAD_NUM);
                 }
             }
         }

@@ -1,6 +1,7 @@
 package cn.luckydeer.manager.api;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -11,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -25,6 +27,8 @@ import cn.luckydeer.model.banner.BannerModel;
 import cn.luckydeer.model.enums.WebCrawEnums;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * 
@@ -78,6 +82,7 @@ public class WebCrawlApi {
                 model.setGoodId(goodId);
                 list.add(model);
             }
+
             updateCache(list, key);
             return list;
         } catch (Exception e) {
@@ -272,6 +277,65 @@ public class WebCrawlApi {
 
     /**
      * 
+     * 注解：获取商品详情 新版接口 
+     * 功能更全面 此前接口暂时废弃
+     * @param goodId
+     * @return
+     * @author yuanxx @date 2018年9月13日
+     */
+    public static String getGoodDetailNew(String goodId) {
+
+        Document doc;
+        try {
+            doc = Jsoup.connect(BaseConstants.IMPORT_BASE_URL + "r=p/d&id=" + goodId).get();
+            Elements elements = doc.getElementsByClass("info col-mar");
+            Element element = elements.get(0);
+            String shopIcon = element.getElementsByTag("img").attr("data-original");//店铺图标
+            String shopName = element.getElementsByTag("h3").text();//店铺名称
+            String rexString = "goodsItem = (.*?);";
+            Pattern pattern = Pattern.compile(rexString);
+            Matcher m = pattern.matcher(doc.toString());
+            if (m.find()) {
+                JSONObject jsonObject = JSON.parseObject(m.group(1).trim());
+                jsonObject.put("shopName", shopName);
+                jsonObject.put("shopIcon", shopIcon);
+                return jsonObject.toJSONString();
+            }
+            return null;
+        } catch (IOException e) {
+            logger.error("获取商品详情失败", e);
+            return null;
+        }
+
+    }
+
+    /**
+     * 
+     * 注解：通过商品真实ID获取商品的信息
+     * @param realGoodId
+     * @return
+     * @author yuanxx @date 2018年9月17日
+     */
+    public static String getGoodDetailByRealId(String realGoodId) {
+        Document doc;
+        try {
+            doc = Jsoup.connect(
+                BaseConstants.IMPORT_BASE_URL + "r=p/d&id=" + realGoodId + "&type=3").get();
+            String rexString = "goodsItem = (.*?);";
+            Pattern pattern = Pattern.compile(rexString);
+            Matcher m = pattern.matcher(doc.toString());
+            if (m.find()) {
+                return m.group(1).trim();
+            }
+            return null;
+        } catch (IOException e) {
+            logger.error("获取商品详情失败", e);
+            return null;
+        }
+    }
+
+    /**
+     * 
      * 注解：获取商品 复制码
      * @param goodId
      * @return
@@ -307,16 +371,20 @@ public class WebCrawlApi {
 
         //拼接请求参数
         StringBuilder builder = new StringBuilder(BaseConstants.MAIN_BASE_URL);
+        if (StringUtils.equals("1", page)) {
+            live_cac_id = "";
+        }
         builder.append("r=index/ajaxnew&page=").append(page).append("&cac_id=");
         if (StringUtils.isNotBlank(live_cac_id)) {
             builder.append(live_cac_id);
         }
         String url = builder.toString();
         try {
-            Document doc = Jsoup.connect(url).get();
-            String result = doc.text();
+            Response doc = Jsoup.connect(url).timeout(5000).execute();
+            String result = doc.body();
             if (StringUtils.equals("1", page)) {
                 String str = JSON.parseObject(result).getJSONObject("data").getString("cac_id");
+                System.out.println(str + "," + live_cac_id);
                 live_cac_id = str;
             }
             return result;
@@ -343,17 +411,73 @@ public class WebCrawlApi {
         Document doc;
         try {
             doc = Jsoup.connect(BaseConstants.MAIN_BASE_URL + "r=index/wap").get();
-            String rexString = "indexContentNav = (.*?)];";
+
+            //使用正则匹配 （非贪婪模式）
+            String rexString = "indexWillBring\",\"data\":(.*?),\"mta_name\"";
             Pattern pattern = Pattern.compile(rexString);
-            Matcher m = pattern.matcher(doc.toString());
+            Matcher m = pattern.matcher(doc.html());
+
             if (m.find()) {
-                updateCache(m.group(1).trim() + "]", key);
-                return m.group(1).trim() + "]";
+                //直接通过正则表达式 提取 每日必买栏目，相比于用循环 ，这个速度更快 ，但是有局限性
+                String resultString = m.group(1).trim();
+                if (StringUtils.isNotBlank(resultString)) {
+                    JSONArray willBringList = JSONObject.parseObject(resultString)
+                        .getJSONObject("config").getJSONArray("list");
+                    Iterator<Object> it = willBringList.iterator();
+                    JSONArray resultList = new JSONArray();
+                    while (it.hasNext()) {
+                        JSONObject goodInfo = (JSONObject) it.next();
+                        BigDecimal quanOver = goodInfo.getBigDecimal("quan_over");
+                        BigDecimal yuanjia = goodInfo.getBigDecimal("yuanjia");
+                        BigDecimal quanJine = goodInfo.getBigDecimal("quan_jine");
+                        if (quanOver.compareTo(new BigDecimal("10000")) >= 0) {
+                            goodInfo.put(
+                                "quan_over",
+                                quanOver.divide(new BigDecimal("10000"), 2,
+                                    BigDecimal.ROUND_HALF_UP) + "万");
+                        } else {
+                            goodInfo.put("quan_over", quanOver);
+                        }
+                        goodInfo.put("nowPrice",
+                            yuanjia.subtract(quanJine).setScale(2, BigDecimal.ROUND_HALF_UP));
+                        resultList.add(goodInfo);
+                    }
+                    updateCache(resultList.toString(), key);
+                    return resultList.toString();
+                }
             }
             return null;
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("获取正在抢购商品信息失败", e);
             return null;
+        }
+
+    }
+
+    /**
+     * 
+     * 注解：通过商品的真实Id(淘宝内部Id)获取商品的主图信息
+     * @param realGoodId
+     * @return
+     * @author yuanxx @date 2018年9月13日
+     */
+    public static String getGoodDescImg(String realGoodId) {
+
+        JSONObject param = new JSONObject();
+        param.put("item_num_id", realGoodId);
+
+        //拼接请求参数
+        StringBuilder builder = new StringBuilder(BaseConstants.TAOBAO_FOOD_IMG);
+        builder.append("data=").append(param.toJSONString()).append("&type=json");
+        String url = builder.toString();
+        try {
+            Document doc = Jsoup.connect(url).ignoreContentType(true).get();
+            String result = doc.text();
+            return result;
+        } catch (IOException e) {
+            logger.error("读取淘宝商品主图信息失败", e);
+            System.out.println(e);
+            return "读取淘宝商品主图信息失败";
         }
 
     }
@@ -361,16 +485,13 @@ public class WebCrawlApi {
     public static void main(String[] args) throws Exception {
 
         long start = System.currentTimeMillis();
-
-        System.out.println(WebCrawlApi.getCurrentQiang());
+        String realGoodId = "45044239606";
+        System.out.println(WebCrawlApi.getGoodDetailByRealId(realGoodId));
         long end = System.currentTimeMillis();
         System.out.println(end - start);
-
         start = System.currentTimeMillis();
-
-        System.out.println(WebCrawlApi.getCurrentQiang());
+        System.out.println(WebCrawlApi.getGoodDetailByRealId(realGoodId));
         end = System.currentTimeMillis();
         System.out.println(end - start);
-
     }
 }
