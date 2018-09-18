@@ -377,10 +377,11 @@ public class WebCrawlApi {
         }
         String url = builder.toString();
         try {
-            Response doc = Jsoup.connect(url).timeout(BaseConstants.DEFAULT_TIME_OUT).execute();
+            Response doc = Jsoup.connect(url).timeout(5000).execute();
             String result = doc.body();
             if (StringUtils.equals("1", page)) {
                 String str = JSON.parseObject(result).getJSONObject("data").getString("cac_id");
+                System.out.println(str + "," + live_cac_id);
                 live_cac_id = str;
             }
             return result;
