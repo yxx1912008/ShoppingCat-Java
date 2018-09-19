@@ -1,8 +1,11 @@
 package cn.luckydeer.manager.cat;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Connection.Response;
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -163,6 +166,35 @@ public class CatManager {
      */
     public WxAppStatusDo getWxAppStatus(String versionId) {
         return wxAppStatusDao.selectByPrimaryKey(versionId);
+    }
+
+    public String getNewsBanner() {
+
+        String url = "https://spider.dcloud.net.cn/api/banner/36kr";
+        try {
+            Response res = Jsoup.connect(url).ignoreContentType(true).execute();
+            return res.body();
+        } catch (IOException e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    public String getNewsDetail(String postId) throws IOException {
+        String url = "https://spider.dcloud.net.cn/api/news/36kr/" + postId;
+        Response res = Jsoup.connect(url).ignoreContentType(true).execute();
+        return res.body();
+    }
+
+    public String getNews() {
+        String url = "https://spider.dcloud.net.cn/api/news";
+        try {
+            Response res = Jsoup.connect(url).ignoreContentType(true).execute();
+            return res.body();
+        } catch (IOException e) {
+            System.out.println(e);
+            return null;
+        }
     }
 
     public void setWxAppStatusDao(IWxAppStatusDao wxAppStatusDao) {

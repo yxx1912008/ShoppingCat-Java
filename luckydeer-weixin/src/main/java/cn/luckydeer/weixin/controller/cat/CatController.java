@@ -215,7 +215,6 @@ public class CatController {
         return catManager.getGoodDetailByRealId(realGoodId);
     }
 
-    
     /**
      * 
      * 注解：获取微信小程序状态值
@@ -227,9 +226,32 @@ public class CatController {
      */
     @RequestMapping(value = "/getWxAppStatus.do", produces = { "application/json;charset=UTF-8" })
     @ResponseBody
-    public String  getWxAppStatus(String versionId,HttpServletRequest request,HttpServletResponse response) {
+    public String getWxAppStatus(String versionId, HttpServletRequest request,
+                                 HttpServletResponse response) {
         WxAppStatusDo info = catManager.getWxAppStatus(versionId);
         return new ResponseObj(info).toJson(request, response);
     }
-    
+
+    @RequestMapping(value = "/getNews.do", produces = { "application/json;charset=UTF-8" })
+    @ResponseBody
+    public String getNews(HttpServletRequest request, HttpServletResponse response) {
+        String info = catManager.getNews();
+        return info;
+    }
+
+    @RequestMapping(value = "/getNewsBanner.do", produces = { "application/json;charset=UTF-8" })
+    @ResponseBody
+    public String getNewsBanner(HttpServletRequest request, HttpServletResponse response) {
+        String info = catManager.getNewsBanner();
+        return info;
+    }
+
+    @RequestMapping(value = "/getNewsDetail.do", produces = { "application/json;charset=UTF-8" })
+    @ResponseBody
+    public String getNewsDetail(String postId, HttpServletRequest request,
+                                HttpServletResponse response) throws Exception {
+        String info = catManager.getNewsDetail(postId);
+        return info;
+    }
+
 }
