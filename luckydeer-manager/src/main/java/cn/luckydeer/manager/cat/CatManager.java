@@ -202,7 +202,7 @@ public class CatManager {
         }
     }
 
-    public static String queryAgent(String areaName) {
+    public String queryAgent(String areaName) {
         String urlString = "http://member.icaomei.com/acaomei/qufx/search.do?areaName=杭州市";
         Map<String, String> headerParameter = new HashMap<String, String>();
         headerParameter.put("content-type", "application/x-www-form-urlencoded");
@@ -213,10 +213,6 @@ public class CatManager {
 
     public void setWxAppStatusDao(IWxAppStatusDao wxAppStatusDao) {
         this.wxAppStatusDao = wxAppStatusDao;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(CatManager.queryAgent("杭州市"));
     }
 
 }

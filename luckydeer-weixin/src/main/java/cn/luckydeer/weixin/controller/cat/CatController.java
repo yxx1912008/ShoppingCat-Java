@@ -254,4 +254,12 @@ public class CatController {
         return info;
     }
 
+    @RequestMapping(value = "/queryAgent.do", produces = { "application/json;charset=UTF-8" })
+    @ResponseBody
+    public String queryAgent(String areaName, HttpServletRequest request,
+                             HttpServletResponse response) throws Exception {
+        String info = catManager.queryAgent(areaName);
+        return info;
+    }
+
 }
