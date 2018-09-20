@@ -1,7 +1,9 @@
 package cn.luckydeer.manager.cat;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Connection.Response;
@@ -10,10 +12,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cn.luckydeer.common.model.ResponseObj;
+import cn.luckydeer.common.utils.http.HttpClientSend;
 import cn.luckydeer.dao.cat.daoInterface.IWxAppStatusDao;
 import cn.luckydeer.dao.cat.dataobject.WxAppStatusDo;
 import cn.luckydeer.manager.api.WebCrawlApi;
 import cn.luckydeer.model.banner.BannerModel;
+
+import com.alibaba.fastjson.JSON;
 
 /**
  * 购物猫接口管理
@@ -197,8 +202,21 @@ public class CatManager {
         }
     }
 
+    public static String queryAgent(String areaName) {
+        String urlString = "http://member.icaomei.com/acaomei/qufx/search.do?areaName=杭州市";
+        Map<String, String> headerParameter = new HashMap<String, String>();
+        headerParameter.put("content-type", "application/x-www-form-urlencoded");
+        String jsonParam = JSON.toJSONString(new HashMap<>().put("areaName", areaName));
+        String res = HttpClientSend.jsonPost(urlString, headerParameter, jsonParam, "UTF-8");
+        return res;
+    }
+
     public void setWxAppStatusDao(IWxAppStatusDao wxAppStatusDao) {
         this.wxAppStatusDao = wxAppStatusDao;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(CatManager.queryAgent("杭州市"));
     }
 
 }
