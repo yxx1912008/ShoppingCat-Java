@@ -232,28 +232,16 @@ public class CatController {
         return new ResponseObj(info).toJson(request, response);
     }
 
-    @RequestMapping(value = "/getNews.do", produces = { "application/json;charset=UTF-8" })
-    @ResponseBody
-    public String getNews(HttpServletRequest request, HttpServletResponse response) {
-        String info = catManager.getNews();
-        return info;
-    }
-
-    @RequestMapping(value = "/getNewsBanner.do", produces = { "application/json;charset=UTF-8" })
-    @ResponseBody
-    public String getNewsBanner(HttpServletRequest request, HttpServletResponse response) {
-        String info = catManager.getNewsBanner();
-        return info;
-    }
-
-    @RequestMapping(value = "/getNewsDetail.do", produces = { "application/json;charset=UTF-8" })
-    @ResponseBody
-    public String getNewsDetail(String postId, HttpServletRequest request,
-                                HttpServletResponse response) throws Exception {
-        String info = catManager.getNewsDetail(postId);
-        return info;
-    }
-
+    /**
+     * 
+     * 注解：购物猫伪装功能 根据区域名称查询代理商费用
+     * @param areaName
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     * @author yuanxx @date 2018年9月21日
+     */
     @RequestMapping(value = "/queryAgent.do", produces = { "application/json;charset=UTF-8" })
     @ResponseBody
     public String queryAgent(String areaName, HttpServletRequest request,

@@ -1,13 +1,10 @@
 package cn.luckydeer.manager.cat;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.Connection.Response;
-import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -173,37 +170,15 @@ public class CatManager {
         return wxAppStatusDao.selectByPrimaryKey(versionId);
     }
 
-    public String getNewsBanner() {
-
-        String url = "https://spider.dcloud.net.cn/api/banner/36kr";
-        try {
-            Response res = Jsoup.connect(url).ignoreContentType(true).execute();
-            return res.body();
-        } catch (IOException e) {
-            System.out.println(e);
-            return null;
-        }
-    }
-
-    public String getNewsDetail(String postId) throws IOException {
-        String url = "https://spider.dcloud.net.cn/api/news/36kr/" + postId;
-        Response res = Jsoup.connect(url).ignoreContentType(true).execute();
-        return res.body();
-    }
-
-    public String getNews() {
-        String url = "https://spider.dcloud.net.cn/api/news";
-        try {
-            Response res = Jsoup.connect(url).ignoreContentType(true).execute();
-            return res.body();
-        } catch (IOException e) {
-            System.out.println(e);
-            return null;
-        }
-    }
-
+    /**
+     * 
+     * 注解：购物猫伪装功能 查询代理商区域费用
+     * @param areaName
+     * @return
+     * @author yuanxx @date 2018年9月21日
+     */
     public String queryAgent(String areaName) {
-        String urlString = "http://member.icaomei.com/acaomei/qufx/search.do?areaName="+areaName;
+        String urlString = "http://member.icaomei.com/acaomei/qufx/search.do?areaName=" + areaName;
         Map<String, String> headerParameter = new HashMap<String, String>();
         headerParameter.put("content-type", "application/x-www-form-urlencoded");
         String jsonParam = JSON.toJSONString(new HashMap<>().put("areaName", areaName));
