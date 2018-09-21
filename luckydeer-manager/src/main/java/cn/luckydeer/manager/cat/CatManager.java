@@ -203,7 +203,7 @@ public class CatManager {
     }
 
     public String queryAgent(String areaName) {
-        String urlString = "http://member.icaomei.com/acaomei/qufx/search.do?areaName=杭州市";
+        String urlString = "http://member.icaomei.com/acaomei/qufx/search.do?areaName="+areaName;
         Map<String, String> headerParameter = new HashMap<String, String>();
         headerParameter.put("content-type", "application/x-www-form-urlencoded");
         String jsonParam = JSON.toJSONString(new HashMap<>().put("areaName", areaName));
