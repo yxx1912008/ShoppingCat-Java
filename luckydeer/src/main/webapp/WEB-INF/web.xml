@@ -16,7 +16,7 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>  classpath*:/springConfig/spring-*.xml,
-	   classpath*:/springConfig/*/spring-*.xml</param-value>
+	   classpath*:/springConfig/*/spring-*.xml,classpath*:/springConfig/*/*/spring-*.xml</param-value>
 	</context-param>
 
 	<listener>
@@ -66,7 +66,7 @@
 			<param-name>contextConfigLocation</param-name>
 			<!--spingMVC的配置路径 -->
 			<param-value>  classpath*:/springConfig/spring-*.xml,
-	   classpath*:/springConfig/*/spring-*.xml</param-value>
+	   classpath*:/springConfig/*/spring-*.xml,classpath*:/springConfig/*/*/spring-*.xml</param-value>
 		</init-param>
 		<!-- 初始化log4j配置 -->
 		<init-param>

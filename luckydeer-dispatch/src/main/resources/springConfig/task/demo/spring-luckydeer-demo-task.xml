@@ -10,7 +10,7 @@
 	<!-- ============================ 调度任务触发器配置 =============================== -->
 	<!-- ============================================================================ -->
 
-	<bean id="demoTask" class="cn.luckydeer.dispatch.task.DemoTask" />
+	<bean id="demoTask" class="cn.luckydeer.dispatch.task.DemoTask"></bean>
 
 	<!-- 2.封装的任务详细工厂类 -->
 	<bean id="demoTaskJobDetail"
