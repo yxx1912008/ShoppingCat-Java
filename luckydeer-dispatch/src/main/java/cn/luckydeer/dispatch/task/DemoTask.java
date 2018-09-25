@@ -19,8 +19,13 @@ public class DemoTask {
      * @author yuanxx @date 2018年9月25日
      */
     public void run() {
-
         logger.info("开始定时任务");
+        long startTime = System.currentTimeMillis();
+        long endTime = System.currentTimeMillis();
+        long queryTime = endTime - startTime;
+        logger.info("执行总时长为：" + queryTime);
+        logger.info("结束定时调度任务");
 
     }
+
 }
