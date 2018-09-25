@@ -8,7 +8,7 @@
 	</parent>
 	<artifactId>luckydeer-dispatch</artifactId>
 	<name>调度系统</name>
-	<description>定时调度 、计划任务</description>
+	<description>定时调度 、计划任务,本来计划是单机系统，但由于 项目过小 ，暂时整合在一起</description>
 	<dependencies>
 		<dependency>
 			<groupId>cn.luckydeer</groupId>

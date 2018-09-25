@@ -11,7 +11,7 @@
 
 
 	<!-- 自动扫描 用于扫描controller -->
-	<context:component-scan base-package="cn.luckydeer.weixin.*" />
+	<context:component-scan base-package="cn.luckydeer.weixin.*,cn.luckydeer.dispatch.*" />
 	<mvc:annotation-driven />
 
 	<!-- 拦截器 -->
