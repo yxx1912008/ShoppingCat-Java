@@ -109,6 +109,22 @@
 		</layout>
 	</appender>
 
+	<!-- 调度任务监控日志 -->
+	<appender name="APPENDER-LUCKYDEER-TASK" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="/windata/logs/luckydeer/luckydeer-task.log" />
+		<param name="append" value="true" />
+		<param name="encoding" value="UTF-8" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %-5p (%c:%L)- %m%n" />
+		</layout>
+	</appender>
+
+	<!-- 调度任务 日志 -->
+	<logger name="LUCKYDEER-TASK-LOG" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="APPENDER-LUCKYDEER-TASK" />
+	</logger>
+
 	<!-- Memcached日志 -->
 	<logger name="LUCKYDEER-MEMCACHED-LOG" additivity="false">
 		<level value="INFO" />
