@@ -1,19 +1,24 @@
 package cn.luckydeer.manager.cat;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cn.luckydeer.common.model.ResponseObj;
+import cn.luckydeer.common.utils.DateUtilSelf;
+import cn.luckydeer.common.utils.cache.CacheData;
 import cn.luckydeer.common.utils.http.HttpClientSend;
 import cn.luckydeer.dao.cat.daoInterface.IWxAppStatusDao;
 import cn.luckydeer.dao.cat.dataobject.WxAppStatusDo;
 import cn.luckydeer.manager.api.WebCrawlApi;
 import cn.luckydeer.model.banner.BannerModel;
+import cn.luckydeer.model.enums.WebCrawEnums;
 
 import com.alibaba.fastjson.JSON;
 
@@ -25,9 +30,12 @@ import com.alibaba.fastjson.JSON;
  */
 public class CatManager {
 
-    Logger                  logger = LoggerFactory.getLogger("LUCKYDEER-MANAGER-LOG");
+    Logger                                logger = LoggerFactory.getLogger("LUCKYDEER-MANAGER-LOG");
 
-    private IWxAppStatusDao wxAppStatusDao;
+    //缓存 
+    private static Map<String, CacheData> cache  = new ConcurrentHashMap<String, CacheData>();
+
+    private IWxAppStatusDao               wxAppStatusDao;
 
     /**
      * 
@@ -162,12 +170,20 @@ public class CatManager {
     /**
      * 
      * 注解：查询微信小程序状态
+     * 使用缓存功能 缓存一天
      * @param versionId
      * @return
      * @author yuanxx @date 2018年9月18日
      */
     public WxAppStatusDo getWxAppStatus(String versionId) {
-        return wxAppStatusDao.selectByPrimaryKey(versionId);
+        String key = WebCrawEnums.WX_STATUS.getCode();
+        if (getCacheTimeOut(key)) {
+            CacheData data = cache.get(key);
+            return (WxAppStatusDo) data.getData();
+        }
+        WxAppStatusDo info = wxAppStatusDao.selectByPrimaryKey(versionId);
+        updateCache(info, key);
+        return info;
     }
 
     /**
@@ -184,6 +200,46 @@ public class CatManager {
         String jsonParam = JSON.toJSONString(new HashMap<>().put("areaName", areaName));
         String res = HttpClientSend.jsonPost(urlString, headerParameter, jsonParam, "UTF-8");
         return res;
+    }
+
+    /**
+     * 
+     * 注解：判断缓存是否过期
+     * 当前仅存放 一天的小程序状态缓存 
+     * 省去 经常去数据库捞取
+     * @param key
+     * @return
+     * @author yuanxx @date 2018年9月25日
+     */
+    private static boolean getCacheTimeOut(String key) {
+        CacheData cahe = cache.get(key);
+        if (null == cahe) {
+            return false;
+        }
+        Date now = new Date();
+        Date expiryTime = cahe.getExpiryTime();
+        int count = DateUtilSelf.calculateDecreaseMinute(expiryTime, now);
+        if (count > 1440) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 
+     * 注解：更新缓存
+     * @param data
+     * @param key
+     * @author yuanxx @date 2018年9月25日
+     */
+    private static void updateCache(Object data, String key) {
+        Date date = new Date();
+        Date expiryTime = DateUtilSelf.increaseHour(date, 24);
+        CacheData cacheData = new CacheData();
+        cacheData.setKey(key);
+        cacheData.setExpiryTime(expiryTime);
+        cacheData.setData(data);
+        cache.put(key, cacheData);
     }
 
     public void setWxAppStatusDao(IWxAppStatusDao wxAppStatusDao) {

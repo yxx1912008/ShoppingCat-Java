@@ -14,6 +14,7 @@ public enum WebCrawEnums {
     NINE("NINE", "9.9包邮"),
     REAL_TIME("REAL_TIME","实时疯抢榜"),
     NEW_QIANG("NEW_QIANG","新版抢购"),
+    WX_STATUS("WX_STATUS","小程序开关状态")
     ;
 
     private String code;

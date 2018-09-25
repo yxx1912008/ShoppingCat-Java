@@ -14,7 +14,8 @@
 		<property name="triggers">
 			<list>
 				<!-- 配置触发器 -->
-				<ref bean="demoTaskTrigger" />
+				<!-- 购物猫 定时更新缓存 -->
+				<ref bean="catRequestTaskTrigger" />
 			</list>
 		</property>
 	</bean>

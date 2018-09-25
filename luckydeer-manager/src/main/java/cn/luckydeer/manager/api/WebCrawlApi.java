@@ -384,7 +384,6 @@ public class WebCrawlApi {
             String result = doc.body();
             if (StringUtils.equals("1", page)) {
                 String str = JSON.parseObject(result).getJSONObject("data").getString("cac_id");
-                System.out.println(str + "," + live_cac_id);
                 live_cac_id = str;
             }
             return result;
@@ -476,7 +475,6 @@ public class WebCrawlApi {
             return result;
         } catch (IOException e) {
             logger.error("读取淘宝商品主图信息失败", e);
-            System.out.println(e);
             return "读取淘宝商品主图信息失败";
         }
 

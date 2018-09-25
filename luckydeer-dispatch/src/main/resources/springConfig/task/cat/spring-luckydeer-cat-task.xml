@@ -10,14 +10,14 @@
 	<!-- ============================ 调度任务触发器配置 =============================== -->
 	<!-- ============================================================================ -->
 
-	<bean id="demoTask" class="cn.luckydeer.dispatch.task.DemoTask"></bean>
+	<bean id="catRequestTask" class="cn.luckydeer.dispatch.task.cat.CatRequestTask"></bean>
 
 	<!-- 2.封装的任务详细工厂类 -->
-	<bean id="demoTaskJobDetail"
+	<bean id="catRequestJobDetail"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<!-- 具体触发任务对象 -->
 		<property name="targetObject">
-			<ref bean="demoTask" />
+			<ref bean="catRequestTask" />
 		</property>
 		<!-- 配置方法 -->
 		<property name="targetMethod">
@@ -30,11 +30,11 @@
 	</bean>
 
 	<!-- 3.触发时间类 ======================== -->
-	<bean id="demoTaskTrigger"
+	<bean id="catRequestTaskTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<!-- jobDetail：Spring封装的任务详细工厂类 -->
 		<property name="jobDetail">
-			<ref bean="demoTaskJobDetail" />
+			<ref bean="catRequestJobDetail" />
 		</property>
 		<!-- 触发时间表达式 -->
 		<property name="cronExpression">
