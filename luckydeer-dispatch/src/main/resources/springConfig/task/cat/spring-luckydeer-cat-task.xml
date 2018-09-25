@@ -38,8 +38,8 @@
 		</property>
 		<!-- 触发时间表达式 -->
 		<property name="cronExpression">
-			<!-- 表达式的时间规则 -->
-			<value>0/50 0/1 * * * ? </value>
+			<!-- 表达式的时间规则：每两个小时更新一次 -->
+			<value>0 0 0/2 * * ? </value>
 		</property>
 	</bean>
 </beans>
