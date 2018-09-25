@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<!-- 配完后将触发器置到调度工厂管理 -->
+	<!-- ======================== 调度工厂 ======================== --> 
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean" >
+	
+	    <!-- QuartzScheduler 延时启动，应用启动后 QuartzScheduler 再启动  startupDelay 以秒为单位 60s-->
+  
+	    <property name="startupDelay" value="60"/>
+
+		<property name="triggers">
+			<list>
+                <!-- 配置触发器 -->	
+                <ref bean="advertTransferTrigger"/>	
+                <ref bean="payAdvertTransferTrigger" />		
+                <ref bean="verifyRegeistShopResultTrigger" />		
+                <ref bean="refreshAmountThisCycleTrigger" />	
+                <ref bean="settlementLastCycleTrigger" />
+			</list>
+		</property>
+	</bean>
+</beans>
