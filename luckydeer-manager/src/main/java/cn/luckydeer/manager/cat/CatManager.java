@@ -177,12 +177,12 @@ public class CatManager {
      */
     public WxAppStatusDo getWxAppStatus(String versionId) {
         String key = WebCrawEnums.WX_STATUS.getCode();
-        if (getCacheTimeOut(key)) {
+        if (getCacheTimeOut(key + versionId)) {
             CacheData data = cache.get(key);
             return (WxAppStatusDo) data.getData();
         }
         WxAppStatusDo info = wxAppStatusDao.selectByPrimaryKey(versionId);
-        updateCache(info, key);
+        updateCache(info, key + versionId);
         return info;
     }
 
