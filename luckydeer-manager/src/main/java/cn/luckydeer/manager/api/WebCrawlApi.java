@@ -131,6 +131,15 @@ public class WebCrawlApi {
 
     /**
      * 
+     * 注解：清除缓存
+     * @author yuanxx @date 2018年9月26日
+     */
+    public static void clearCache() {
+        webCrawCache.clear();
+    }
+
+    /**
+     * 
      * 注解：获取咚咚抢商品列表
      * @return
      * @author yuanxx @date 2018年8月26日

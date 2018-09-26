@@ -250,4 +250,19 @@ public class CatController {
         return info;
     }
 
+    /**
+     * 
+     * 注解：清除缓存
+     * @param request
+     * @param response
+     * @return
+     * @author yuanxx @date 2018年9月26日
+     */
+    @RequestMapping(value = "/clearCache.do", produces = { "application/json;charset=UTF-8" })
+    @ResponseBody
+    public String clearCache(HttpServletRequest request, HttpServletResponse response) {
+        catManager.clearCache();
+        return new ResponseObj().toJson(request, response);
+    }
+
 }

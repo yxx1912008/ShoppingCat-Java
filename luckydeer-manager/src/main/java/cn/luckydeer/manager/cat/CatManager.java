@@ -242,6 +242,16 @@ public class CatManager {
         cache.put(key, cacheData);
     }
 
+    /**
+     * 
+     * 注解：清空缓存
+     * @author yuanxx @date 2018年9月26日
+     */
+    public void clearCache() {
+        cache.clear();
+        WebCrawlApi.clearCache();
+    }
+
     public void setWxAppStatusDao(IWxAppStatusDao wxAppStatusDao) {
         this.wxAppStatusDao = wxAppStatusDao;
     }
