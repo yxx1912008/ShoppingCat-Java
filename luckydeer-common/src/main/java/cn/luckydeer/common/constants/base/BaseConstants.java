@@ -35,6 +35,6 @@ public interface BaseConstants {
     String DTK_MAIN_URL       = "http://api.dataoke.com/index.php?";
 
     //小程序 数据请求 基础地、地址
-    String WX_BASE_API_URL    = "https://wx.star0393.com/";
+    String WX_BASE_API_URL    = "https://api.luckydeer.cn/";
 
 }
