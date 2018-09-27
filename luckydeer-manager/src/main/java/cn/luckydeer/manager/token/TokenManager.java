@@ -3,7 +3,7 @@ package cn.luckydeer.manager.token;
 import java.util.Date;
 
 import cn.luckydeer.common.constants.HeaderContants;
-import cn.luckydeer.common.utils.DateUtilSelf;
+import cn.luckydeer.common.utils.date.DateUtilSelf;
 import cn.luckydeer.memcached.api.DistributedCached;
 import cn.luckydeer.memcached.enums.CachedType;
 import cn.luckydeer.model.user.UserSessionModel;

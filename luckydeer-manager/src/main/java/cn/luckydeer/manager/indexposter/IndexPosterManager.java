@@ -9,7 +9,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cn.luckydeer.common.utils.DateUtilSelf;
+import cn.luckydeer.common.utils.date.DateUtilSelf;
 import cn.luckydeer.dao.webmagic.daoInterface.ICatIndexPosterDao;
 import cn.luckydeer.dao.webmagic.dataobject.CatIndexPosterDo;
 import cn.luckydeer.manager.webmagic.pipeline.CatPipeLine;

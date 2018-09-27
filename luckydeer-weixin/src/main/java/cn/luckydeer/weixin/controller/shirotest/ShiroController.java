@@ -16,7 +16,7 @@ import cn.luckydeer.baseaction.basecontroller.BaseController;
 import cn.luckydeer.baseaction.utils.OperationContextHolder;
 import cn.luckydeer.common.enums.view.ViewShowEnums;
 import cn.luckydeer.common.model.ResponseObj;
-import cn.luckydeer.common.utils.SelfStringUtils;
+import cn.luckydeer.common.utils.string.SelfStringUtils;
 import cn.luckydeer.manager.token.TokenManager;
 import cn.luckydeer.model.user.UserSessionModel;
 
