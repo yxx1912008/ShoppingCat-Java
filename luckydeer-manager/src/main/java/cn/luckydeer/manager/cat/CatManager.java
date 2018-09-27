@@ -183,8 +183,12 @@ public class CatManager {
             return (WxAppStatusDo) data.getData();
         }
         WxAppStatusDo info = wxAppStatusDao.selectByPrimaryKey(versionId);
-        info.setBaseUrl(BaseConstants.WX_BASE_API_URL);
-        updateCache(info, key);
+
+        if (null != info) {
+            info.setBaseUrl(BaseConstants.WX_BASE_API_URL);
+            updateCache(info, key);
+        }
+
         return info;
     }
 
