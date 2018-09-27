@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cn.luckydeer.common.constants.base.BaseConstants;
 import cn.luckydeer.common.model.ResponseObj;
 import cn.luckydeer.common.utils.DateUtilSelf;
 import cn.luckydeer.common.utils.cache.CacheData;
@@ -182,6 +183,7 @@ public class CatManager {
             return (WxAppStatusDo) data.getData();
         }
         WxAppStatusDo info = wxAppStatusDao.selectByPrimaryKey(versionId);
+        info.setBaseUrl(BaseConstants.WX_BASE_API_URL);
         updateCache(info, key);
         return info;
     }
