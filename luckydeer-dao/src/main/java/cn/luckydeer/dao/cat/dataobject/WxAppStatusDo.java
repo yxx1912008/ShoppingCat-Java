@@ -10,32 +10,37 @@ package cn.luckydeer.dao.cat.dataobject;
  * @version $Id: WxAppStatus.java, v 0.1 2018年9月18日 下午9:36:23 yuanxx Exp $
  */
 public class WxAppStatusDo {
-    
+
     //小程序版本号码
     private String versionId;
-    
 
-    private int status;
+    private int    status;
 
+    //请求根地址
+    private String baseUrl;
 
     public String getVersionId() {
         return versionId;
     }
 
-
     public void setVersionId(String versionId) {
         this.versionId = versionId;
     }
-
 
     public int getStatus() {
         return status;
     }
 
-
     public void setStatus(int status) {
         this.status = status;
     }
-    
-    
+
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+
 }
