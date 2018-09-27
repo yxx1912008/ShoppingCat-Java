@@ -1,5 +1,7 @@
 package cn.luckydeer.dao.cat.dataobject;
 
+import java.io.Serializable;
+
 /**
  * 购物猫小程序
  * 状态开关
@@ -9,15 +11,18 @@ package cn.luckydeer.dao.cat.dataobject;
  * @author yuanxx
  * @version $Id: WxAppStatus.java, v 0.1 2018年9月18日 下午9:36:23 yuanxx Exp $
  */
-public class WxAppStatusDo {
+public class WxAppStatusDo implements Serializable {
+
+    /**  */
+    private static final long serialVersionUID = -5147257780909692215L;
 
     //小程序版本号码
-    private String versionId;
+    private String            versionId;
 
-    private int    status;
+    private int               status;
 
     //请求根地址
-    private String baseUrl;
+    private String            baseUrl;
 
     public String getVersionId() {
         return versionId;
