@@ -11,7 +11,10 @@
 	<bean id="tokenManager" class="cn.luckydeer.manager.token.TokenManager" />
 	<!-- 首页海报管理 -->
 	<bean id="indexPosterManager" class="cn.luckydeer.manager.indexposter.IndexPosterManager" />
-	
+
 	<bean id="catManager" class="cn.luckydeer.manager.cat.CatManager" />
+
+	<!-- 微信帮助类 -->
+	<bean id="weixinPublicHelper" class="cn.luckydeer.manager.helper.WeixinPublicHelper" />
 
 </beans>
