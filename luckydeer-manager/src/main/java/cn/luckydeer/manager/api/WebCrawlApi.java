@@ -491,14 +491,8 @@ public class WebCrawlApi {
 
     public static void main(String[] args) throws Exception {
 
-        long start = System.currentTimeMillis();
-        String realGoodId = "45044239606";
-        System.out.println(WebCrawlApi.getGoodDetailByRealId(realGoodId));
-        long end = System.currentTimeMillis();
-        System.out.println(end - start);
-        start = System.currentTimeMillis();
-        System.out.println(WebCrawlApi.getGoodDetailByRealId(realGoodId));
-        end = System.currentTimeMillis();
-        System.out.println(end - start);
+        String keyWords = "单片机";
+        String res = WebCrawlApi.searchGood(keyWords);
+        System.out.println(res);
     }
 }

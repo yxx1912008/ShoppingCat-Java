@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +18,17 @@ import org.apache.commons.logging.LogFactory;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+
+import cn.luckydeer.common.utils.wechat.model.WeixinPicAndText;
+import cn.luckydeer.common.utils.wechat.model.WeixinPicTextItem;
+import cn.luckydeer.common.utils.wechat.model.WeixinTextMsg;
+import cn.luckydeer.model.enums.WeixinMsgType;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.core.util.QuickWriter;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
+import com.thoughtworks.xstream.io.xml.XppDriver;
 
 /**
  * 消息相关工具类
@@ -97,4 +110,93 @@ public class WeixinOffAccountUtil {
         }
     }
 
+    /**
+    * 发送消息xml
+    * @param toUserName
+    * @param fromUserName
+    * @param content
+    * @return
+    */
+    public static String messageText(String fromUserName, String toUserName, String content) {
+        WeixinTextMsg text = new WeixinTextMsg();
+        text.setToUserName(fromUserName);
+        text.setFromUserName(toUserName);
+        text.setCreateTime(new Date().getTime());
+        text.setMsgType(WeixinMsgType.TEXT.getCode());
+        text.setContent(content);
+        String result = textMessageToXml(text);
+        return result;
+    }
+
+    /**
+     * 
+     * 注解：将文本消息转换为xml
+     * @param textMessage
+     * @return
+     * @author yuanxx @date 2018年9月28日
+     */
+    public static String textMessageToXml(WeixinTextMsg textMessage) {
+        xstream.alias("xml", textMessage.getClass());
+        return xstream.toXML(textMessage);
+    }
+
+    /**
+     * 
+     * 注解：将图文消息转换为 xml
+     * @param textMessage
+     * @return
+     * @author yuanxx @date 2018年9月28日
+     */
+    public static String picAndTextMessageToXml(WeixinPicAndText picAndText) {
+        xstream.processAnnotations(picAndText.getClass());
+        return xstream.toXML(picAndText);
+    }
+
+    /**
+     * 
+     * 注解：微信发送图文消息
+     * @param fromUserName
+     * @param toUserName
+     * @param content
+     * @return
+     * @author yuanxx @date 2018年9月28日
+     */
+    public static String sendTextAndPic(String fromUserName, String toUserName,
+                                        List<WeixinPicTextItem> articles) {
+        WeixinPicAndText picAndText = new WeixinPicAndText();
+        picAndText.setArticleCount(articles.size() + 1);
+        picAndText.setArticles(articles);
+        picAndText.setCreateTime(new Date().getTime());
+        picAndText.setFromUserName(toUserName);
+        picAndText.setToUserName(fromUserName);
+        picAndText.setMsgType(WeixinMsgType.NEWS.getCode());
+        String result = picAndTextMessageToXml(picAndText);
+        return result;
+    }
+
+    private static XStream xstream = new XStream(new XppDriver() {
+                                       public HierarchicalStreamWriter createWriter(Writer out) {
+                                           return new PrettyPrintWriter(out) {
+
+                                               boolean cdata = true;
+
+                                               @SuppressWarnings("rawtypes")
+                                               public void startNode(String name, Class clazz) {
+                                                   super.startNode(name, clazz);
+                                               }
+
+                                               protected void writeText(QuickWriter writer,
+                                                                        String text) {
+                                                   if (cdata) {
+                                                       writer.write("<![CDATA[");
+                                                       writer.write(text);
+                                                       writer.write("]]>");
+
+                                                   } else {
+                                                       writer.write(text);
+                                                   }
+                                               }
+                                           };
+                                       }
+                                   });
 }

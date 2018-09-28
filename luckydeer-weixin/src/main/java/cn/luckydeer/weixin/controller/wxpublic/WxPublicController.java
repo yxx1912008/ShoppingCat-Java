@@ -34,9 +34,6 @@ public class WxPublicController {
 
     @RequestMapping(value = "/wxAuthen.do", produces = "application/json;charset=utf-8")
     public void wxAuthen(HttpServletResponse response, HttpServletRequest request) {
-
-        System.out.println("开始");
-
         if (request.getMethod().toUpperCase().equals("GET")) {// GET模式，微信服务器验证
 
             String token = WeixinPublicConfig.TOKEN;
@@ -73,6 +70,7 @@ public class WxPublicController {
                 if (StringUtils.isNotEmpty(message)) {
                     WeixinOffAccountUtil.outWriteText(response, message);
                 }
+                WeixinOffAccountUtil.outWriteText(response, "success");
             } catch (Exception e) {
                 logger.error("微信用户消息处理异常", e);
             }
