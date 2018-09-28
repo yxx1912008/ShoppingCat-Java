@@ -17,6 +17,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.jsoup.Jsoup;
 import org.springframework.util.CollectionUtils;
 
 import cn.luckydeer.common.constants.base.BaseConstants;
@@ -31,6 +32,8 @@ import cn.luckydeer.model.cat.SearchGoodInfo;
 import cn.luckydeer.model.enums.WeixinMsgType;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * 微信工具类
@@ -114,8 +117,12 @@ public class WeixinPublicHelper {
 
         //功能列表 1.搜索电影  2.搜索优惠券 3.添加电影
         if (StringUtils.contains(content, "电影")) {
-            String resultString = WeixinOffAccountUtil.messageText(fName, toName, content);
-            return resultString;
+            content = StringUtils.replace(content, "电影", "").trim();
+            List<WeixinPicTextItem> articles = getMovieInfo(content, fName, toName);
+            if (CollectionUtils.isEmpty(articles)) {
+                return null;
+            }
+            return WeixinOffAccountUtil.sendTextAndPic(fName, toName, articles);
         }
 
         if (StringUtils.contains(content, "优惠券")) {
@@ -143,14 +150,13 @@ public class WeixinPublicHelper {
             EmailOrder emailOrder = new EmailOrder();
             emailOrder.setTitle("购物猫公众号添加电影通知");
             emailOrder.setContent("有用户需要您添加电影:" + content + DateUtilSelf.simpleDate(new Date()));
-            emailOrder.setReceives(BaseConstants.emailReceives);
+            emailOrder.setReceives(BaseConstants.EMAIL_RECEIVES);
             //发送邮件
             AliyunEmail.send(emailOrder);
             return WeixinOffAccountUtil
                 .messageText(fName, toName, "/:heart感谢您的大力支持\r\n/:rose《" + content
                                             + "》已经申请添加\r\n/:gift稍后会发送到您个人微信");
         }
-
         //默认回复内容
         return WeixinOffAccountUtil.messageText(fName, toName,
             WeixinPublicConfig.WEIXIN_PUBLIC_RETURN);
@@ -181,7 +187,7 @@ public class WeixinPublicHelper {
                 .messageText(fName, toName, WeixinPublicConfig.WEIXIN_PUBLIC_RETURN);
         }
         if (null != emailOrder) {
-            emailOrder.setReceives(BaseConstants.emailReceives);
+            emailOrder.setReceives(BaseConstants.EMAIL_RECEIVES);
             AliyunEmail.send(emailOrder);
         }
         return "success";
@@ -220,6 +226,48 @@ public class WeixinPublicHelper {
             return resultList;
         }
         return null;
+    }
+
+    /**
+     * 
+     * 注解：搜索电影信息
+     * @param keyWord
+     * @param fName
+     * @param toName
+     * @return
+     * @author yuanxx @date 2018年9月28日
+     */
+    public List<WeixinPicTextItem> getMovieInfo(String keyWord, String fName, String toName) {
+
+        List<WeixinPicTextItem> list = new ArrayList<>();
+        WeixinPicTextItem picTextItem = new WeixinPicTextItem();
+        picTextItem.setTitle("影视《" + keyWord + "》已经找到，点击查看");
+        picTextItem.setPicUrl(BaseConstants.BASE_LOGO_URL);
+        picTextItem.setDescription("查看更多电影信息");
+
+        //拼接电影搜索网址
+        String urlString = BaseConstants.MOVIE_URL + "/search/" + keyWord + ".html";
+
+        try {
+            org.jsoup.nodes.Document doc = Jsoup
+                .connect(
+                    "http://api.t.sina.com.cn/short_url/shorten.json?source=3421048570&url_long="
+                            + urlString).ignoreContentType(true).get();
+            String result = doc.text();
+            JSONArray array = JSONArray.parseArray(result);
+            JSONObject resultJson = (JSONObject) array.get(0);
+            picTextItem.setUrl(resultJson.get("url_short").toString());
+            System.out.println("缩短后的地址为:" + resultJson.get("url_short").toString());
+            list.add(picTextItem);
+            return list;
+        } catch (IOException e) {
+            logger.error("搜索电影 网址缩短失败 " + urlString, e);
+            return null;
+        } catch (Exception e) {
+            logger.error("搜索电影未知错误", e);
+            return null;
+        }
+
     }
 
     public void setCatManager(CatManager catManager) {
