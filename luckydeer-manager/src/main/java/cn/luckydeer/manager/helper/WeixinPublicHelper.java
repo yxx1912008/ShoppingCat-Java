@@ -2,6 +2,8 @@ package cn.luckydeer.manager.helper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +19,6 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.jsoup.Jsoup;
 import org.springframework.util.CollectionUtils;
 
 import cn.luckydeer.common.constants.base.BaseConstants;
@@ -32,8 +33,6 @@ import cn.luckydeer.model.cat.SearchGoodInfo;
 import cn.luckydeer.model.enums.WeixinMsgType;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
 /**
  * 微信工具类
@@ -246,25 +245,15 @@ public class WeixinPublicHelper {
         picTextItem.setDescription("查看更多电影信息");
 
         //拼接电影搜索网址
-        String urlString = BaseConstants.MOVIE_URL + "/search/" + keyWord + ".html";
-
+        String urlString;
         try {
-            org.jsoup.nodes.Document doc = Jsoup
-                .connect(
-                    "http://api.t.sina.com.cn/short_url/shorten.json?source=3421048570&url_long="
-                            + urlString).ignoreContentType(true).get();
-            String result = doc.text();
-            JSONArray array = JSONArray.parseArray(result);
-            JSONObject resultJson = (JSONObject) array.get(0);
-            picTextItem.setUrl(resultJson.get("url_short").toString());
-            //  System.out.println("缩短后的地址为:" + resultJson.get("url_short").toString());
+            urlString = BaseConstants.MOVIE_URL + "/search/" + URLEncoder.encode(keyWord, "UTF-8")
+                        + ".html";
+            picTextItem.setUrl(urlString);
             list.add(picTextItem);
             return list;
-        } catch (IOException e) {
-            logger.error("搜索电影 网址缩短失败 " + urlString, e);
-            return null;
-        } catch (Exception e) {
-            logger.error("搜索电影未知错误", e);
+        } catch (UnsupportedEncodingException e) {
+            logger.error("搜索电影失败", e);
             return null;
         }
 
