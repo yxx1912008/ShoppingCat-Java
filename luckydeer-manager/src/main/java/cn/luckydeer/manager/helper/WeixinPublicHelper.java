@@ -81,7 +81,10 @@ public class WeixinPublicHelper {
                 }
                 switch (type) {
                     case EVENT:
-                        break;
+                        List<Element> eventList = document.selectNodes("/xml/Event");
+                        String event = eventList.get(0).getText();
+                        String result = hanleWeixinEvent(event, openId, toName);
+                        return result;
                     case TEXT:
                         List<Element> contentList = document.selectNodes("/xml/Content");
                         String content = contentList.get(0).getText();
@@ -143,13 +146,45 @@ public class WeixinPublicHelper {
             emailOrder.setReceives(BaseConstants.emailReceives);
             //发送邮件
             AliyunEmail.send(emailOrder);
-            return WeixinOffAccountUtil.messageText(fName, toName, "/:heart感谢您的大力支持\r\n/:rose" + content
-                                                                   + "已经申请添加\r\n/:gift稍后会发送到您个人微信");
+            return WeixinOffAccountUtil
+                .messageText(fName, toName, "/:heart感谢您的大力支持\r\n/:rose《" + content
+                                            + "》已经申请添加\r\n/:gift稍后会发送到您个人微信");
         }
 
         //默认回复内容
         return WeixinOffAccountUtil.messageText(fName, toName,
             WeixinPublicConfig.WEIXIN_PUBLIC_RETURN);
+    }
+
+    /**
+     * 
+     * 注解：处理微信事件
+     * @param openId
+     * @param toName
+     * @param content
+     * @return
+     * @author yuanxx @date 2018年9月28日
+     */
+    public String hanleWeixinEvent(String event, String fName, String toName) {
+        EmailOrder emailOrder = null;
+        //如果有人取消关注 发送邮件
+        if (StringUtils.equals("unsubscribe", event)) {
+            emailOrder = new EmailOrder();
+            emailOrder.setTitle("购物猫公众号用户取消订阅通知");
+            emailOrder.setContent("有用户取消订阅:" + DateUtilSelf.simpleDate(new Date()));
+        }
+        if (StringUtils.equals("subscribe", event)) {
+            emailOrder = new EmailOrder();
+            emailOrder.setTitle("购物猫公众号用户订阅通知");
+            emailOrder.setContent("有新用户订阅:" + DateUtilSelf.simpleDate(new Date()));
+            WeixinOffAccountUtil
+                .messageText(fName, toName, WeixinPublicConfig.WEIXIN_PUBLIC_RETURN);
+        }
+        if (null != emailOrder) {
+            emailOrder.setReceives(BaseConstants.emailReceives);
+            AliyunEmail.send(emailOrder);
+        }
+        return "success";
     }
 
     /**
@@ -185,10 +220,6 @@ public class WeixinPublicHelper {
             return resultList;
         }
         return null;
-    }
-
-    public static void main(String[] args) {
-
     }
 
     public void setCatManager(CatManager catManager) {

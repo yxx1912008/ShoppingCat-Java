@@ -34,14 +34,13 @@ public class WxPublicController {
 
     @RequestMapping(value = "/wxAuthen.do", produces = "application/json;charset=utf-8")
     public void wxAuthen(HttpServletResponse response, HttpServletRequest request) {
-        if (request.getMethod().toUpperCase().equals("GET")) {// GET模式，微信服务器验证
 
+        if (request.getMethod().toUpperCase().equals("GET")) {// GET模式，微信服务器验证
             String token = WeixinPublicConfig.TOKEN;
             String signature = WeixinOffAccountUtil.loadString(request, "signature");
             String timestamp = WeixinOffAccountUtil.loadString(request, "timestamp");
             String nonce = WeixinOffAccountUtil.loadString(request, "nonce");
             String echostr = WeixinOffAccountUtil.loadString(request, "echostr");
-
             if (StringUtils.isNotBlank(echostr) && StringUtils.isNotBlank(signature)) {
                 //将获取到的参数放入数组
                 String[] ArrTmp = { token, timestamp, nonce };
@@ -65,7 +64,6 @@ public class WxPublicController {
             // POST模式，微信用户消息处理
             //TODO yxx 微信用户消息处理
             try {
-                System.out.println("处理用户消息");
                 String message = weixinPublicHelper.handleWeixin(request, response);
                 if (StringUtils.isNotEmpty(message)) {
                     WeixinOffAccountUtil.outWriteText(response, message);
