@@ -3,6 +3,7 @@ package cn.luckydeer.manager.helper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,9 @@ import org.springframework.util.CollectionUtils;
 
 import cn.luckydeer.common.constants.base.BaseConstants;
 import cn.luckydeer.common.constants.weixin.WeixinPublicConfig;
+import cn.luckydeer.common.utils.date.DateUtilSelf;
+import cn.luckydeer.common.utils.email.AliyunEmail;
+import cn.luckydeer.common.utils.email.EmailOrder;
 import cn.luckydeer.common.utils.wechat.WeixinOffAccountUtil;
 import cn.luckydeer.common.utils.wechat.model.WeixinPicTextItem;
 import cn.luckydeer.manager.cat.CatManager;
@@ -85,19 +89,15 @@ public class WeixinPublicHelper {
                         String resultString = hanleWeixinText(openId, toName, content);
                         return resultString;
                     default:
-                        String defaultWord = "/:heart 查找优惠券，请在前面加 “优惠券“ 字\r\n例如：我想找耳机优惠券，输入： 优惠券 宝宝金水 \r\n指定商品查找优惠券，先复制淘宝商品完整标题，然后发给我";
-                        return WeixinOffAccountUtil.messageText(openId, toName, defaultWord);
+                        break;
                 }
-
             }
-            System.out.println(xmlstr);
             return msg;
         } catch (IOException e) {
             logger.error("收取微信消息失败", e);
         } catch (DocumentException e) {
             logger.error("将文本转换为xml对象失败，文本内容为：" + xmlstr);
         }
-
         return null;
     }
 
@@ -109,7 +109,7 @@ public class WeixinPublicHelper {
      */
     public String hanleWeixinText(String fName, String toName, String content) {
 
-        //功能列表 1.搜索电影  2.搜索优惠券
+        //功能列表 1.搜索电影  2.搜索优惠券 3.添加电影
         if (StringUtils.contains(content, "电影")) {
             String resultString = WeixinOffAccountUtil.messageText(fName, toName, content);
             return resultString;
@@ -134,6 +134,19 @@ public class WeixinPublicHelper {
             System.out.println(resultString);
             return resultString;
         }
+        //添加电影
+        if (StringUtils.contains(content, "添加")) {
+            content = StringUtils.replace(content, "添加", "").trim();
+            EmailOrder emailOrder = new EmailOrder();
+            emailOrder.setTitle("购物猫公众号添加电影通知");
+            emailOrder.setContent("有用户需要您添加电影:" + content + DateUtilSelf.simpleDate(new Date()));
+            emailOrder.setReceives(BaseConstants.emailReceives);
+            //发送邮件
+            AliyunEmail.send(emailOrder);
+            return WeixinOffAccountUtil.messageText(fName, toName, "/:heart感谢您的大力支持\r\n/:rose" + content
+                                                                   + "已经申请添加\r\n/:gift稍后会发送到您个人微信");
+        }
+
         //默认回复内容
         return WeixinOffAccountUtil.messageText(fName, toName,
             WeixinPublicConfig.WEIXIN_PUBLIC_RETURN);
