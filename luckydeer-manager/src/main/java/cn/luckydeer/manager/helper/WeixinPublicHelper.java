@@ -19,6 +19,7 @@ import org.dom4j.Element;
 import org.springframework.util.CollectionUtils;
 
 import cn.luckydeer.common.constants.base.BaseConstants;
+import cn.luckydeer.common.constants.weixin.WeixinPublicConfig;
 import cn.luckydeer.common.utils.wechat.WeixinOffAccountUtil;
 import cn.luckydeer.common.utils.wechat.model.WeixinPicTextItem;
 import cn.luckydeer.manager.cat.CatManager;
@@ -82,11 +83,10 @@ public class WeixinPublicHelper {
                         String content = contentList.get(0).getText();
                         //处理用户的微信回复消息
                         String resultString = hanleWeixinText(openId, toName, content);
-                        System.out.println(resultString);
-
                         return resultString;
                     default:
-                        return null;
+                        String defaultWord = "/:heart 查找优惠券，请在前面加 “优惠券“ 字\r\n例如：我想找耳机优惠券，输入： 优惠券 宝宝金水 \r\n指定商品查找优惠券，先复制淘宝商品完整标题，然后发给我";
+                        return WeixinOffAccountUtil.messageText(openId, toName, defaultWord);
                 }
 
             }
@@ -121,7 +121,7 @@ public class WeixinPublicHelper {
             if (CollectionUtils.isEmpty(list)) {
                 return null;
             }
-
+            //最下面的 点击查看更多
             WeixinPicTextItem picTextItem = new WeixinPicTextItem();
             picTextItem.setTitle("点击查看更多优惠商品");
             picTextItem.setPicUrl(BaseConstants.BASE_LOGO_URL);
@@ -134,8 +134,9 @@ public class WeixinPublicHelper {
             System.out.println(resultString);
             return resultString;
         }
-
-        return null;
+        //默认回复内容
+        return WeixinOffAccountUtil.messageText(fName, toName,
+            WeixinPublicConfig.WEIXIN_PUBLIC_RETURN);
     }
 
     /**
