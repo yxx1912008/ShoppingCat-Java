@@ -17,7 +17,7 @@ public interface BaseConstants {
     String   MAIN_BASE_URL      = "http://www.haowuzi.net/index.php?";
 
     //关键站点根地址
-    String   IMPORT_BASE_URL    = "http://star0393.com/index.php?";
+    String   IMPORT_BASE_URL    = "http://cat.luckydeer.cn/index.php?";
 
     //淘宝商品主图信息接口
     String   TAOBAO_FOOD_IMG    = "http://hws.m.taobao.com/cache/mtop.wdetail.getItemDescx/4.1/?";
