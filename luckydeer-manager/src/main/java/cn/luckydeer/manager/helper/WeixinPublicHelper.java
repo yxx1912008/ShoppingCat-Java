@@ -65,7 +65,7 @@ public class WeixinPublicHelper {
             is = request.getInputStream();
             //将微信发送的流转换为String -utf8类型
             xmlstr = IOUtils.toString(is, "utf-8");
-            System.out.println(xmlstr);
+            // System.out.println(xmlstr);
             if (StringUtils.isNotBlank(xmlstr)) {
                 Document document;
                 document = DocumentHelper.parseText(xmlstr);//将xml文本转换为对象
@@ -257,7 +257,7 @@ public class WeixinPublicHelper {
             JSONArray array = JSONArray.parseArray(result);
             JSONObject resultJson = (JSONObject) array.get(0);
             picTextItem.setUrl(resultJson.get("url_short").toString());
-            System.out.println("缩短后的地址为:" + resultJson.get("url_short").toString());
+            //  System.out.println("缩短后的地址为:" + resultJson.get("url_short").toString());
             list.add(picTextItem);
             return list;
         } catch (IOException e) {
