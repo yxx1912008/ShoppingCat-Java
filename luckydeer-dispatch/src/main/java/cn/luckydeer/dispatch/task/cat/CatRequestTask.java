@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import cn.luckydeer.manager.api.WebCrawlApi;
-import cn.luckydeer.manager.cat.CatManager;
 
 /**
  * 购物猫定时任务 
@@ -18,8 +17,6 @@ public class CatRequestTask {
 
     private static final Log logger = LogFactory.getLog("LUCKYDEER-TASK-LOG");
 
-    private CatManager       catManager;
-
     /**
      * 
      * 注解：更新购物猫缓存
@@ -31,11 +28,7 @@ public class CatRequestTask {
         WebCrawlApi.getBanner();//更新海报
         WebCrawlApi.getTicketLive("1");
         WebCrawlApi.getCurrentQiang();
-        catManager.getWxAppStatus("1.0.1");
         logger.info("更新缓存任务结束");
     }
 
-    public void setCatManager(CatManager catManager) {
-        this.catManager = catManager;
-    }
 }
