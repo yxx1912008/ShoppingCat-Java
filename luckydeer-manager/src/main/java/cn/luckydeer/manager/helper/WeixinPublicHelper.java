@@ -125,6 +125,9 @@ public class WeixinPublicHelper {
             WeixinPicTextItem picTextItem = new WeixinPicTextItem();
             picTextItem.setTitle("点击查看更多优惠商品");
             picTextItem.setPicUrl(BaseConstants.BASE_LOGO_URL);
+            picTextItem.setDescription("查看更多优惠商品");
+            picTextItem.setUrl(BaseConstants.IMPORT_BASE_URL + "r=index%2Fsearch&s_type=1&kw="
+                               + content);
             list.add(picTextItem);
 
             String resultString = WeixinOffAccountUtil.sendTextAndPic(fName, toName, list);

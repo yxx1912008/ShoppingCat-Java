@@ -38,6 +38,6 @@ public interface BaseConstants {
     String WX_BASE_API_URL    = "https://api.luckydeer.cn/";
 
     //购物猫logo地址
-    String BASE_LOGO_URL      = "";
+    String BASE_LOGO_URL      = "http://yxx19912008.eicp.net/static/cat/logo.png";
 
 }

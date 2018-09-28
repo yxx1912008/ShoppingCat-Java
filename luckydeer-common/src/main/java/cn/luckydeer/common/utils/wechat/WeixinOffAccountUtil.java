@@ -164,7 +164,7 @@ public class WeixinOffAccountUtil {
     public static String sendTextAndPic(String fromUserName, String toUserName,
                                         List<WeixinPicTextItem> articles) {
         WeixinPicAndText picAndText = new WeixinPicAndText();
-        picAndText.setArticleCount(articles.size() + 1);
+        picAndText.setArticleCount(articles.size());
         picAndText.setArticles(articles);
         picAndText.setCreateTime(new Date().getTime());
         picAndText.setFromUserName(toUserName);
