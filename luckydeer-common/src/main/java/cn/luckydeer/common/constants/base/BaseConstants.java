@@ -23,7 +23,7 @@ public interface BaseConstants {
     String   TAOBAO_FOOD_IMG    = "http://hws.m.taobao.com/cache/mtop.wdetail.getItemDescx/4.1/?";
 
     //默认请求超时时间
-    int      DEFAULT_TIME_OUT   = 5000;
+    int      DEFAULT_TIME_OUT   = 6000;
 
     //大淘客网站内部ID
     String   DATAOKE_USER_ID    = "675425";
