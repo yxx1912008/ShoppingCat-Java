@@ -38,7 +38,7 @@ public interface BaseConstants {
     String   WX_BASE_API_URL    = "https://api.luckydeer.cn/";
 
     //购物猫logo地址
-    String   BASE_LOGO_URL      = "http://yxx19912008.eicp.net/static/cat/logo.png";
+    String   BASE_LOGO_URL      = "http://api.luckydeer.cn/static/cat/logo.png";
 
     //管理人员邮箱账号
     String[] EMAIL_RECEIVES     = { "y15507700062@icloud.com", "1509494914@qq.com" };
