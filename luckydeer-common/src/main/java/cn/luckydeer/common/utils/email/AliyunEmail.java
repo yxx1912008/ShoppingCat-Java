@@ -97,7 +97,6 @@ public class AliyunEmail {
             mailSender.send(mailMessage); //发送邮件 
             return true;
         } catch (Exception e) {
-            System.out.println(e);
             logger.error("email发送异常:" + emailOrder.getTitle(), e);
         }
         return false;

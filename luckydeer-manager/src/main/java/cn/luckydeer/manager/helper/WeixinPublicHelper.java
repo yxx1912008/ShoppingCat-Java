@@ -140,7 +140,6 @@ public class WeixinPublicHelper {
             list.add(picTextItem);
 
             String resultString = WeixinOffAccountUtil.sendTextAndPic(fName, toName, list);
-            System.out.println(resultString);
             return resultString;
         }
         //添加电影

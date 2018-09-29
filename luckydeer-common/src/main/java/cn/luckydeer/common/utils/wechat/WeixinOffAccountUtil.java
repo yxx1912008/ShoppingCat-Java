@@ -61,7 +61,6 @@ public class WeixinOffAccountUtil {
         List<Element> elementList = root.elements();
 
         for (Element e : elementList) {
-            System.out.println(e.getName() + "," + e.getText());
             map.put(e.getName(), e.getText());
         }
         inputStream.close();
