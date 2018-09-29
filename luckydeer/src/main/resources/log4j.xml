@@ -119,6 +119,22 @@
 		</layout>
 	</appender>
 
+	<!-- 微信相关日志 -->
+	<appender name="APPENDER-LUCKYDEER-WEIXIN" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="/windata/logs/luckydeer/luckydeer-weixin.log" />
+		<param name="append" value="true" />
+		<param name="encoding" value="UTF-8" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %-5p (%c:%L)- %m%n" />
+		</layout>
+	</appender>
+
+	<!-- 微信日志 -->
+	<logger name="LUCKYDEER-WEIXIN-LOG" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="APPENDER-LUCKYDEER-WEIXIN" />
+	</logger>
+
 	<!-- 调度任务 日志 -->
 	<logger name="LUCKYDEER-TASK-LOG" additivity="false">
 		<level value="INFO" />

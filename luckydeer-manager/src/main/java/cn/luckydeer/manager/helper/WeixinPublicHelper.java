@@ -42,7 +42,7 @@ import com.alibaba.fastjson.JSON;
  */
 public class WeixinPublicHelper {
 
-    private static final Log logger = LogFactory.getLog(WeixinPublicHelper.class);
+    private static final Log logger = LogFactory.getLog("LUCKYDEER-WEIXIN-LOG");
 
     private CatManager       catManager;
 
@@ -65,6 +65,7 @@ public class WeixinPublicHelper {
             //将微信发送的流转换为String -utf8类型
             xmlstr = IOUtils.toString(is, "utf-8");
             // System.out.println(xmlstr);
+            logger.error("微信公众号接受信息:" + xmlstr);
             if (StringUtils.isNotBlank(xmlstr)) {
                 Document document;
                 document = DocumentHelper.parseText(xmlstr);//将xml文本转换为对象
@@ -138,7 +139,6 @@ public class WeixinPublicHelper {
             picTextItem.setUrl(BaseConstants.IMPORT_BASE_URL + "r=index%2Fsearch&s_type=1&kw="
                                + content);
             list.add(picTextItem);
-
             String resultString = WeixinOffAccountUtil.sendTextAndPic(fName, toName, list);
             return resultString;
         }
