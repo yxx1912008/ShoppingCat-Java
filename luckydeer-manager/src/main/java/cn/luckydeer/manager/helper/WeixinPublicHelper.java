@@ -181,8 +181,9 @@ public class WeixinPublicHelper {
             emailOrder = new EmailOrder();
             emailOrder.setTitle("购物猫公众号用户订阅通知");
             emailOrder.setContent("有新用户订阅:" + DateUtilSelf.simpleDate(new Date()));
-            WeixinOffAccountUtil
-                .messageText(fName, toName, WeixinPublicConfig.WEIXIN_PUBLIC_RETURN);
+            //设置关注回复消息
+            return WeixinOffAccountUtil.messageText(fName, toName,
+                WeixinPublicConfig.WEIXIN_PUBLIC_RETURN);
         }
         if (null != emailOrder) {
             emailOrder.setReceives(BaseConstants.EMAIL_RECEIVES);
