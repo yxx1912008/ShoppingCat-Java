@@ -16,6 +16,8 @@
 				<!-- 配置触发器 -->
 				<!-- 购物猫 定时更新缓存 -->
 				<ref bean="catRequestTaskTrigger" />
+				<!-- 电影自动更新 -->
+				<ref bean="movieTaskTrigger" />
 			</list>
 		</property>
 	</bean>
