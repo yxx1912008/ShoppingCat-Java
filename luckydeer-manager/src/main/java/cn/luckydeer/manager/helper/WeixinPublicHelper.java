@@ -176,18 +176,16 @@ public class WeixinPublicHelper {
             emailOrder = new EmailOrder();
             emailOrder.setTitle("购物猫公众号用户取消订阅通知");
             emailOrder.setContent("有用户取消订阅:" + DateUtilSelf.simpleDate(new Date()));
+            sendMail(emailOrder);//异步发送邮件
         }
         if (StringUtils.equals("subscribe", event)) {
             emailOrder = new EmailOrder();
             emailOrder.setTitle("购物猫公众号用户订阅通知");
             emailOrder.setContent("有新用户订阅:" + DateUtilSelf.simpleDate(new Date()));
             //设置关注回复消息
+            sendMail(emailOrder);//异步发送邮件
             return WeixinOffAccountUtil.messageText(fName, toName,
                 WeixinPublicConfig.WEIXIN_PUBLIC_RETURN);
-        }
-        if (null != emailOrder) {
-            emailOrder.setReceives(BaseConstants.EMAIL_RECEIVES);
-            AliyunEmail.send(emailOrder);
         }
         return "success";
     }
@@ -247,7 +245,8 @@ public class WeixinPublicHelper {
         //拼接电影搜索网址
         String urlString;
         try {
-            urlString = BaseConstants.MOVIE_URL + "/index.php/vod/search.html?wd=" + URLEncoder.encode(keyWord, "UTF-8");
+            urlString = BaseConstants.MOVIE_URL + "/index.php/vod/search.html?wd="
+                        + URLEncoder.encode(keyWord, "UTF-8");
             picTextItem.setUrl(urlString);
             list.add(picTextItem);
             return list;
@@ -255,7 +254,17 @@ public class WeixinPublicHelper {
             logger.error("搜索电影失败", e);
             return null;
         }
+    }
 
+    /**
+     * 
+     * 注解：异步发送邮件
+     * @param emailOrder
+     * @author yuanxx @date 2018年10月8日
+     */
+    public void sendMail(EmailOrder emailOrder) {
+        emailOrder.setReceives(BaseConstants.EMAIL_RECEIVES);
+        AliyunEmail.send(emailOrder);
     }
 
     public void setCatManager(CatManager catManager) {
