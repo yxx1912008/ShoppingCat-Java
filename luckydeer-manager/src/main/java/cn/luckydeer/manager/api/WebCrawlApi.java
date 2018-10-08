@@ -329,7 +329,7 @@ public class WebCrawlApi {
                                          + jsonObject.getString("goodsid");
                             distributedCached.put(CachedType.STATISTICS, key, list);
                         }
-                        logger.error("获取商品主图信息失败");
+                        logger.error("获取商品主图信息失败" + imgListDiv.text());
                     }
                 });//异步 缓存 商品海报
                 return jsonObject.toJSONString();
