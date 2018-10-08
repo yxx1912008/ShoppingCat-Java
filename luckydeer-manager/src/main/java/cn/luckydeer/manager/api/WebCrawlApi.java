@@ -491,8 +491,9 @@ public class WebCrawlApi {
 
     public static void main(String[] args) throws Exception {
 
-        String keyWords = "单片机";
-        String res = WebCrawlApi.searchGood(keyWords);
-        System.out.println(res);
+        Document doc = Jsoup.connect("https://h5.m.taobao.com/awp/core/detail.htm?id=575026844521")
+            .get();
+        System.out.println(doc.html());
+
     }
 }

@@ -247,8 +247,7 @@ public class WeixinPublicHelper {
         //拼接电影搜索网址
         String urlString;
         try {
-            urlString = BaseConstants.MOVIE_URL + "/search/" + URLEncoder.encode(keyWord, "UTF-8")
-                        + ".html";
+            urlString = BaseConstants.MOVIE_URL + "/index.php/vod/search.html?wd=" + URLEncoder.encode(keyWord, "UTF-8");
             picTextItem.setUrl(urlString);
             list.add(picTextItem);
             return list;

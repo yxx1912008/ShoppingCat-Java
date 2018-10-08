@@ -14,10 +14,10 @@ public interface BaseConstants {
      * 所以 次要信息从其它人网站抓取
      * 关键商品信息 还是用自己的 ，因为需要商品码 
      */
-    String   MAIN_BASE_URL      = "http://www.haowuzi.net/index.php?";
+    String   MAIN_BASE_URL      = "http://cat.gouwumao.top/index.php?";
 
     //关键站点根地址
-    String   IMPORT_BASE_URL    = "http://cat.luckydeer.cn/index.php?";
+    String   IMPORT_BASE_URL    = "http://cat.gouwumao.top/index.php?";
 
     //淘宝商品主图信息接口
     String   TAOBAO_FOOD_IMG    = "http://hws.m.taobao.com/cache/mtop.wdetail.getItemDescx/4.1/?";
@@ -44,6 +44,6 @@ public interface BaseConstants {
     String[] EMAIL_RECEIVES     = { "y15507700062@icloud.com", "1509494914@qq.com" };
 
     //小鹿影音地址
-    String   MOVIE_URL          = "http://vip.luckydeer.cn";
+    String   MOVIE_URL          = "http://vip.gouwumao.top";
 
 }
