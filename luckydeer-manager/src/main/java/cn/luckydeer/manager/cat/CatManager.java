@@ -38,6 +38,8 @@ public class CatManager {
 
     private IWxAppStatusDao               wxAppStatusDao;
 
+    private WebCrawlApi                   webCrawlApi;
+
     /**
      * 
      * 注解：获取首页海报
@@ -111,7 +113,7 @@ public class CatManager {
      * @author yuanxx @date 2018年8月27日
      */
     public String getGoodDetail(String goodId) {
-        return WebCrawlApi.getGoodDetailNew(goodId);
+        return webCrawlApi.getGoodDetailNew(goodId);
     }
 
     /**
@@ -153,8 +155,8 @@ public class CatManager {
      * @return
      * @author yuanxx @date 2018年9月13日
      */
-    public String getGoodDescImg(String realGoodId) {
-        return WebCrawlApi.getGoodDescImg(realGoodId);
+    public List<String> getGoodDescImg(String realGoodId) {
+        return webCrawlApi.getGoodDescImgs(realGoodId);
     }
 
     /**
@@ -260,6 +262,10 @@ public class CatManager {
 
     public void setWxAppStatusDao(IWxAppStatusDao wxAppStatusDao) {
         this.wxAppStatusDao = wxAppStatusDao;
+    }
+
+    public void setWebCrawlApi(WebCrawlApi webCrawlApi) {
+        this.webCrawlApi = webCrawlApi;
     }
 
 }

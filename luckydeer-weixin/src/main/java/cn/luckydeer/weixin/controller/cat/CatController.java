@@ -1,11 +1,16 @@
 package cn.luckydeer.weixin.controller.cat;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -191,7 +196,14 @@ public class CatController {
             return new ResponseObj(ViewShowEnums.ERROR_FAILED.getStatus(), "商品真实ID不能为空").toJson(
                 request, response);
         }
-        return catManager.getGoodDescImg(realGoodId);
+        List<String> batchImgs = catManager.getGoodDescImg(realGoodId);
+        if (CollectionUtils.isEmpty(batchImgs)) {
+            return new ResponseObj(ViewShowEnums.ERROR_FAILED.getStatus(), "获取商品主图信息失败").toJson(
+                request, response);
+        }
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("images", batchImgs);
+        return new ResponseObj(param).toJson(request, response);
     }
 
     /**

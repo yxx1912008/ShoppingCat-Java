@@ -148,9 +148,7 @@ public class WeixinPublicHelper {
             EmailOrder emailOrder = new EmailOrder();
             emailOrder.setTitle("购物猫公众号添加电影通知");
             emailOrder.setContent("有用户需要您添加电影:" + content + DateUtilSelf.simpleDate(new Date()));
-            emailOrder.setReceives(BaseConstants.EMAIL_RECEIVES);
-            //发送邮件
-            AliyunEmail.send(emailOrder);
+            sendMail(emailOrder);//发送异步邮件
             return WeixinOffAccountUtil
                 .messageText(fName, toName, "/:heart感谢您的大力支持\r\n/:rose《" + content
                                             + "》已经申请添加\r\n/:gift稍后会发送到您个人微信");

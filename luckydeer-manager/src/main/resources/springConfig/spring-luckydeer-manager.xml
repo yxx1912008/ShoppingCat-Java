@@ -17,4 +17,7 @@
 	<!-- 微信帮助类 -->
 	<bean id="weixinPublicHelper" class="cn.luckydeer.manager.helper.WeixinPublicHelper" />
 
+	<!-- 购物猫请求帮助类 -->
+	<bean id="webCrawlApi" class="cn.luckydeer.manager.api.WebCrawlApi" />
+
 </beans>
