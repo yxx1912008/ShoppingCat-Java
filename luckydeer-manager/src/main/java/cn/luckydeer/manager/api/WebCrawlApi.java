@@ -194,7 +194,7 @@ public class WebCrawlApi {
             return result;
         } catch (IOException e) {
             logger.error("读取9.9包邮商品列表失败", e);
-            return "读取9.9包邮商品列表失败";
+            return null;
         }
     }
 
@@ -225,7 +225,7 @@ public class WebCrawlApi {
             return result;
         } catch (IOException e) {
             logger.error("获取实时疯抢榜失败", e);
-            return "获取实时疯抢榜失败";
+            return null;
         }
     }
 
@@ -398,7 +398,7 @@ public class WebCrawlApi {
             return result;
         } catch (IOException e) {
             logger.error("读取领券直播商品列表失败", e);
-            return "读取领券直播商品列表失败";
+            return null;
         }
     }
 
@@ -484,7 +484,7 @@ public class WebCrawlApi {
             return result;
         } catch (IOException e) {
             logger.error("读取淘宝商品主图信息失败", e);
-            return "读取淘宝商品主图信息失败";
+            return null;
         }
 
     }
