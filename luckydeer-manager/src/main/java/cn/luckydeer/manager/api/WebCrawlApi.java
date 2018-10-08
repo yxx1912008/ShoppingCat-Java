@@ -301,7 +301,7 @@ public class WebCrawlApi {
      */
     public String getGoodDetailNew(String goodId) {
 
-        Document doc;
+        final Document doc;
         try {
             doc = Jsoup.connect(BaseConstants.IMPORT_BASE_URL + "r=p/d&id=" + goodId).get();
             Elements elements = doc.getElementsByClass("info col-mar");
@@ -318,10 +318,15 @@ public class WebCrawlApi {
                 ExecutorServiceUtils.getExcutorPools().execute(new Runnable() {
                     @Override
                     public void run() {
+                        Elements imgListDiv = doc.getElementsByClass("imglist").get(0)
+                            .getElementsByTag("img");
+                        List<String> list = new ArrayList<>();
+                        String head = "https:";
+                        for (Element element2 : imgListDiv) {
+                            list.add(head + element2.attr("data-original"));
+                        }
                         String key = CaChePrefixConstants.GOOD_IMG_CACHE
                                      + jsonObject.getString("goodsid");
-                        List<String> list = jsonObject.getJSONArray("batchImage").toJavaList(
-                            String.class);
                         distributedCached.put(CachedType.STATISTICS, key, list);
                     }
                 });//异步 缓存 商品海报
@@ -332,7 +337,6 @@ public class WebCrawlApi {
             logger.error("获取商品详情失败", e);
             return null;
         }
-
     }
 
     /**
