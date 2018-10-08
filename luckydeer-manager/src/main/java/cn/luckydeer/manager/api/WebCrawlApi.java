@@ -60,16 +60,12 @@ public class WebCrawlApi {
      */
     @SuppressWarnings("unchecked")
     public static List<BannerModel> getBanner() {
-
         String key = WebCrawEnums.BANNER.getCode();
-
         boolean flag = getCacheTimeOut(key);
-
         if (flag) {
             CacheData cache = webCrawCache.get(key);
             return (List<BannerModel>) cache.getData();
         }
-
         //请求海报信息
         Document doc;
         try {
@@ -88,7 +84,6 @@ public class WebCrawlApi {
                 model.setGoodId(goodId);
                 list.add(model);
             }
-
             updateCache(list, key);
             return list;
         } catch (Exception e) {
@@ -159,7 +154,8 @@ public class WebCrawlApi {
         }
         Document doc;
         try {
-            doc = Jsoup.connect(BaseConstants.MAIN_BASE_URL + "r=ddq/wap").get();
+            doc = Jsoup.connect(BaseConstants.MAIN_BASE_URL + "r=ddq/wap")
+                .timeout(BaseConstants.DEFAULT_TIME_OUT).get();
             String rexString = "data = (.*?);";
             Pattern pattern = Pattern.compile(rexString);
             Matcher m = pattern.matcher(doc.toString());
@@ -191,7 +187,7 @@ public class WebCrawlApi {
         }
         String url = builder.toString();
         try {
-            Document doc = Jsoup.connect(url).get();
+            Document doc = Jsoup.connect(url).timeout(BaseConstants.DEFAULT_TIME_OUT).get();
             String result = doc.text();
             if (StringUtils.equals("1", page)) {
                 String str = JSON.parseObject(result).getJSONObject("data").getString("cac_id");
@@ -303,7 +299,8 @@ public class WebCrawlApi {
 
         final Document doc;
         try {
-            doc = Jsoup.connect(BaseConstants.IMPORT_BASE_URL + "r=p/d&id=" + goodId).get();
+            doc = Jsoup.connect(BaseConstants.IMPORT_BASE_URL + "r=p/d&id=" + goodId)
+                .timeout(BaseConstants.DEFAULT_TIME_OUT).get();
             Elements elements = doc.getElementsByClass("info col-mar");
             Element element = elements.get(0);
             String shopIcon = element.getElementsByTag("img").attr("data-original");//店铺图标
@@ -322,12 +319,15 @@ public class WebCrawlApi {
                             .getElementsByTag("img");
                         List<String> list = new ArrayList<>();
                         String head = "https:";
-                        for (Element element2 : imgListDiv) {
-                            list.add(head + element2.attr("data-original"));
+                        if (!imgListDiv.isEmpty()) {
+                            for (Element element2 : imgListDiv) {
+                                list.add(head + element2.attr("data-original"));
+                            }
+                            String key = CaChePrefixConstants.GOOD_IMG_CACHE
+                                         + jsonObject.getString("goodsid");
+                            distributedCached.put(CachedType.STATISTICS, key, list);
                         }
-                        String key = CaChePrefixConstants.GOOD_IMG_CACHE
-                                     + jsonObject.getString("goodsid");
-                        distributedCached.put(CachedType.STATISTICS, key, list);
+                        logger.error("获取商品主图信息失败");
                     }
                 });//异步 缓存 商品海报
                 return jsonObject.toJSONString();
@@ -346,16 +346,37 @@ public class WebCrawlApi {
      * @return
      * @author yuanxx @date 2018年9月17日
      */
-    public static String getGoodDetailByRealId(String realGoodId) {
-        Document doc;
+    public String getGoodDetailByRealId(String realGoodId) {
+        final Document doc;
         try {
-            doc = Jsoup.connect(
-                BaseConstants.IMPORT_BASE_URL + "r=p/d&id=" + realGoodId + "&type=3").get();
+            doc = Jsoup
+                .connect(BaseConstants.IMPORT_BASE_URL + "r=p/d&id=" + realGoodId + "&type=3")
+                .timeout(BaseConstants.DEFAULT_TIME_OUT).get();
             String rexString = "goodsItem = (.*?);";
             Pattern pattern = Pattern.compile(rexString);
             Matcher m = pattern.matcher(doc.toString());
             if (m.find()) {
-                return m.group(1).trim();
+                final String result = m.group(1).trim();
+                ExecutorServiceUtils.getExcutorPools().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        JSONObject jsonObject = JSONObject.parseObject(result);
+                        Elements imgListDiv = doc.getElementsByClass("imglist").get(0)
+                            .getElementsByTag("img");
+                        List<String> list = new ArrayList<>();
+                        String head = "https:";
+                        if (!imgListDiv.isEmpty()) {
+                            for (Element element2 : imgListDiv) {
+                                list.add(head + element2.attr("data-original"));
+                            }
+                            String key = CaChePrefixConstants.GOOD_IMG_CACHE
+                                         + jsonObject.getString("goodsid");
+                            distributedCached.put(CachedType.STATISTICS, key, list);
+                        }
+                        logger.error("获取商品主图信息失败");
+                    }
+                });
+                return result;
             }
             return null;
         } catch (IOException e) {
@@ -410,7 +431,7 @@ public class WebCrawlApi {
         }
         String url = builder.toString();
         try {
-            Response doc = Jsoup.connect(url).timeout(5000).execute();
+            Response doc = Jsoup.connect(url).timeout(BaseConstants.DEFAULT_TIME_OUT).execute();
             String result = doc.body();
             if (StringUtils.equals("1", page)) {
                 String str = JSON.parseObject(result).getJSONObject("data").getString("cac_id");
@@ -439,8 +460,8 @@ public class WebCrawlApi {
         }
         Document doc;
         try {
-            doc = Jsoup.connect(BaseConstants.MAIN_BASE_URL + "r=index/wap").get();
-
+            doc = Jsoup.connect(BaseConstants.MAIN_BASE_URL + "r=index/wap")
+                .timeout(BaseConstants.DEFAULT_TIME_OUT).get();
             //使用正则匹配 （非贪婪模式）
             String rexString = "indexWillBring\",\"data\":(.*?),\"mta_name\"";
             Pattern pattern = Pattern.compile(rexString);
