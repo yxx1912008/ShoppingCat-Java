@@ -160,8 +160,9 @@ public class WebCrawlApi {
             Pattern pattern = Pattern.compile(rexString);
             Matcher m = pattern.matcher(doc.toString());
             if (m.find()) {
-                updateCache(m.group(1).trim(), key);
-                return m.group(1).trim();
+                String result = m.group(1).trim();
+                updateCache(result, key);
+                return result;
             }
             return null;
         } catch (IOException e) {
