@@ -269,6 +269,7 @@ public class WebCrawlApi {
      * @return
      * @author yuanxx @date 2018年8月27日
      */
+    @Deprecated
     public static String getGoodDetail(String goodId) {
 
         StringBuilder builder = new StringBuilder(BaseConstants.DTK_MAIN_URL);
