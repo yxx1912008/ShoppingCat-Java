@@ -41,7 +41,7 @@ public interface BaseConstants {
     String   BASE_LOGO_URL      = "http://api.luckydeer.cn/static/cat/logo.png";
 
     //管理人员邮箱账号
-    String[] EMAIL_RECEIVES     = { "y15507700062@icloud.com", "1509494914@qq.com" };
+    String[] EMAIL_RECEIVES     = { "y15507700062@icloud.com", "yxx19912008@icloud.com" };
 
     //小鹿影音地址
     String   MOVIE_URL          = "http://vip.gouwumao.top";
