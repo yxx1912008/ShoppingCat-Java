@@ -305,6 +305,6 @@ public class WeixinPublicHelper {
     public static void main(String[] args) {
         String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="
                      + WeixinPublicConfig.APP_ID + "&secret=" + WeixinPublicConfig.APP_SECRET;
-        WeixinPublicHelper.getHttpResult(url);
+        System.out.println(WeixinPublicHelper.getHttpResult(url));
     }
 }
