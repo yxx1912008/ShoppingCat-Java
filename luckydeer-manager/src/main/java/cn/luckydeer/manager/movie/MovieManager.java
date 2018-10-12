@@ -44,9 +44,7 @@ public class MovieManager {
     public List<WeixinPicTextItem> getMovieInfo(String keyWord, String fName, String toName) {
 
         List<WeixinPicTextItem> list = new ArrayList<>();
-
         List<MacVodDo> movieList = selectTopFiveMovie(keyWord);
-
         if (!CollectionUtils.isEmpty(movieList)) {
             WeixinPicTextItem movieItem = null;
             String url = BaseConstants.MOVIE_URL + "/index.php/vod/detail/id/";
