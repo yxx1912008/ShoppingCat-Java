@@ -1,7 +1,10 @@
 package cn.luckydeer.movie.dao.movie.daoImpl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
 
 import cn.luckydeer.movie.dao.movie.daoInterface.IMacVodDao;
@@ -23,8 +26,13 @@ public class MacVodDao extends SqlSessionDaoSupport implements IMacVodDao {
      * @see cn.luckydeer.movie.dao.movie.daoInterface.IMacVodDao#selectTopFiveMovie()
      */
     @Override
-    public List<MacVodDo> selectTopFiveMovie() {
-        return getSqlSession().selectList(namespace + "selectTopFiveMovie");
+    public List<MacVodDo> selectTopFiveMovie(String keyWords) {
+
+        Map<String, String> param = new HashMap<String, String>();
+        if (StringUtils.isNotBlank(keyWords)) {
+            param.put("keyWords", keyWords);
+        }
+        return getSqlSession().selectList(namespace + "selectTopFiveMovie", param);
     }
 
 }

@@ -35,7 +35,9 @@ public class MovieDaoTest extends BaseTest {
      */
     @Test
     public void selectTopFiveMovie() throws Exception {
-        List<MacVodDo> list = macVodDao.selectTopFiveMovie();
+        String keyWords = "女人";
+        List<MacVodDo> list = macVodDao.selectTopFiveMovie(keyWords);
+        System.out.println(list.size());
         for (MacVodDo macVodDo : list) {
             System.out.println(ToStringBuilder.reflectionToString(macVodDo));
         }

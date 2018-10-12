@@ -5,8 +5,10 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 
 import cn.luckydeer.common.constants.base.BaseConstants;
 import cn.luckydeer.common.utils.wechat.model.WeixinPicTextItem;
@@ -26,8 +28,8 @@ public class MovieManager {
      * @return
      * @author yuanxx @date 2018年10月12日
      */
-    public List<MacVodDo> selectTopFiveMovie() {
-        return macVodDao.selectTopFiveMovie();
+    private List<MacVodDo> selectTopFiveMovie(String keyWords) {
+        return macVodDao.selectTopFiveMovie(keyWords);
     }
 
     /**
@@ -42,8 +44,29 @@ public class MovieManager {
     public List<WeixinPicTextItem> getMovieInfo(String keyWord, String fName, String toName) {
 
         List<WeixinPicTextItem> list = new ArrayList<>();
+
+        List<MacVodDo> movieList = selectTopFiveMovie(keyWord);
+
+        if (!CollectionUtils.isEmpty(movieList)) {
+            WeixinPicTextItem movieItem = null;
+            String url = BaseConstants.MOVIE_URL + "/index.php/vod/detail/id/";
+            for (MacVodDo macVodDo : movieList) {
+                movieItem = new WeixinPicTextItem();
+                movieItem.setTitle(macVodDo.getVodName());
+                movieItem.setDescription(macVodDo.getVodContent());
+                String pic = macVodDo.getVodPic();
+                //如果地址里包含 前缀 替换前缀
+                if (StringUtils.contains(macVodDo.getVodPic(), "pic.php?pic=")) {
+                    pic = StringUtils.replace(pic, "pic.php?pic=", "http://");
+                }
+                movieItem.setPicUrl(pic);
+                movieItem.setUrl(url + macVodDo.getVodId() + ".html");
+                list.add(movieItem);
+            }
+        }
+
         WeixinPicTextItem picTextItem = new WeixinPicTextItem();
-        picTextItem.setTitle("影视《" + keyWord + "》已经找到，点击查看");
+        picTextItem.setTitle("影视《" + keyWord + "》已经找到，点击查看更多信息");
         picTextItem.setPicUrl(BaseConstants.BASE_LOGO_URL);
         picTextItem.setDescription("查看更多电影信息");
 

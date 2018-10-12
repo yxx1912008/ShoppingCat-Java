@@ -28,10 +28,13 @@
 		SELECT
 		<include refid="Base_Column_List" />
 		FROM mac_vod
+		where 1=1
+		<if test="keyWords != null">
+			and vod_name like
+			CONCAT('%',#{keyWords,jdbcType=VARCHAR},'%')
+		</if>
 		ORDER BY vod_time_add DESC
 		limit 5
 	</select>
-
-
 
 </mapper>

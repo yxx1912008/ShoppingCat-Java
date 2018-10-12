@@ -20,6 +20,6 @@ public interface IMacVodDao {
      * @return
      * @author yuanxx @date 2018年10月12日
      */
-    List<MacVodDo> selectTopFiveMovie();
+    List<MacVodDo> selectTopFiveMovie(String keyWord);
 
 }
