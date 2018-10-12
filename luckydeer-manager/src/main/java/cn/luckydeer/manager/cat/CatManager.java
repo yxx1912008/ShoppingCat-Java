@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +16,10 @@ import cn.luckydeer.common.constants.base.BaseConstants;
 import cn.luckydeer.common.model.ResponseObj;
 import cn.luckydeer.common.utils.cache.CacheData;
 import cn.luckydeer.common.utils.date.DateUtilSelf;
+import cn.luckydeer.common.utils.email.AliyunEmail;
+import cn.luckydeer.common.utils.email.EmailOrder;
 import cn.luckydeer.common.utils.http.HttpClientSend;
+import cn.luckydeer.common.utils.thread.ExecutorServiceUtils;
 import cn.luckydeer.dao.cat.daoInterface.IWxAppStatusDao;
 import cn.luckydeer.dao.cat.dataobject.WxAppStatusDo;
 import cn.luckydeer.manager.api.WebCrawlApi;
@@ -123,7 +128,20 @@ public class CatManager {
      * @return
      * @author yuanxx @date 2018年9月5日
      */
-    public String getGoodCodeText(String goodId) {
+    public String getGoodCodeText(final HttpServletRequest request, final String goodId) {
+
+        ExecutorServiceUtils.getExcutorPools().execute(new Runnable() {
+            @Override
+            public void run() {
+                EmailOrder emailOrder = new EmailOrder();
+                emailOrder.setContent("有用户主动领取商品优惠券,时间:" + DateUtilSelf.simpleFormat(new Date())
+                                      + "<br>用户的Ip地址为：" + request.getRemoteAddr() + "<br>商品链接地址为:"
+                                      + BaseConstants.IMPORT_BASE_URL + "r=p/d&id=" + goodId);
+                emailOrder.setTitle("购物猫用户主动领取优惠券通知");
+                emailOrder.setReceives(BaseConstants.EMAIL_RECEIVES);
+                AliyunEmail.send(emailOrder);
+            }
+        });
         return WebCrawlApi.getGoodCodeText(goodId);
     }
 

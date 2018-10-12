@@ -139,7 +139,7 @@ public class CatController {
             return new ResponseObj(ViewShowEnums.ERROR_FAILED.getStatus(), "商品ID不能为空").toJson(
                 request, response);
         }
-        String codeText = catManager.getGoodCodeText(goodId);
+        String codeText = catManager.getGoodCodeText(request, goodId);
         return new ResponseObj(codeText).toJson(request, response);
     }
 
