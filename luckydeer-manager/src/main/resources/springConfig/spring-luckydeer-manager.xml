@@ -20,4 +20,7 @@
 	<!-- 购物猫请求帮助类 -->
 	<bean id="webCrawlApi" class="cn.luckydeer.manager.api.WebCrawlApi" />
 
+	<!-- 电影信息管理 -->
+	<bean id="movieManager" class="cn.luckydeer.manager.movie.MovieManager" />
+
 </beans>

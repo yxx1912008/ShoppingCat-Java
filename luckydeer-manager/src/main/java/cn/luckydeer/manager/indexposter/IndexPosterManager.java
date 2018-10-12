@@ -25,7 +25,7 @@ import cn.luckydeer.webmagic.task.IndexPosterTask;
  */
 public class IndexPosterManager {
 
-    Logger                             logger      = LoggerFactory
+    private static final Logger        logger      = LoggerFactory
                                                        .getLogger("LUCKYDEER-MANAGER-LOG");
 
     /** 缓存 用来缓存首页海报  */

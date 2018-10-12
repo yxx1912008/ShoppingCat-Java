@@ -1,5 +1,6 @@
 package cn.luckydeer.manager.cat;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 
 import cn.luckydeer.common.constants.base.BaseConstants;
 import cn.luckydeer.common.model.ResponseObj;
@@ -20,10 +22,12 @@ import cn.luckydeer.common.utils.email.AliyunEmail;
 import cn.luckydeer.common.utils.email.EmailOrder;
 import cn.luckydeer.common.utils.http.HttpClientSend;
 import cn.luckydeer.common.utils.thread.ExecutorServiceUtils;
+import cn.luckydeer.common.utils.wechat.model.WeixinPicTextItem;
 import cn.luckydeer.dao.cat.daoInterface.IWxAppStatusDao;
 import cn.luckydeer.dao.cat.dataobject.WxAppStatusDo;
 import cn.luckydeer.manager.api.WebCrawlApi;
 import cn.luckydeer.model.banner.BannerModel;
+import cn.luckydeer.model.cat.SearchGoodInfo;
 import cn.luckydeer.model.enums.WebCrawEnums;
 
 import com.alibaba.fastjson.JSON;
@@ -36,7 +40,7 @@ import com.alibaba.fastjson.JSON;
  */
 public class CatManager {
 
-    Logger                                logger = LoggerFactory.getLogger("LUCKYDEER-MANAGER-LOG");
+    private static final Logger           logger = LoggerFactory.getLogger("LUCKYDEER-MANAGER-LOG");
 
     //缓存 
     private static Map<String, CacheData> cache  = new ConcurrentHashMap<String, CacheData>();
@@ -199,6 +203,41 @@ public class CatManager {
      */
     public String getGoodDetailByRealId(String realGoodId) {
         return webCrawlApi.getGoodDetailByRealId(realGoodId);
+    }
+
+    /**
+     * 
+     * 注解：搜索五个商品信息
+     * @return
+     * @author yuanxx @date 2018年9月28日
+     */
+    public List<WeixinPicTextItem> getSearchGoods(String keyWords) {
+
+        String result = searchGood(keyWords);
+        if (StringUtils.isNotBlank(result)) {
+            //将搜索结果转换为数组
+            List<SearchGoodInfo> goodList = JSON.parseArray(result, SearchGoodInfo.class);
+            if (CollectionUtils.isEmpty(goodList)) {
+                return null;
+            }
+            int fromIndex = 0;
+            //如果搜索结果查过五条 ，就查询前五条 否则提取前几个
+            int toIndex = goodList.size() > 5 ? 4 : goodList.size();
+            List<SearchGoodInfo> topList = goodList.subList(fromIndex, toIndex);
+            List<WeixinPicTextItem> resultList = new ArrayList<>();
+            WeixinPicTextItem picTextItem = null;
+            for (SearchGoodInfo searchGoodInfo : topList) {
+                picTextItem = new WeixinPicTextItem();
+                picTextItem.setDescription(searchGoodInfo.getQuan_jine() + "元优惠券，点击领取");
+                picTextItem.setPicUrl(searchGoodInfo.getPic());
+                picTextItem.setTitle(searchGoodInfo.getD_title());
+                picTextItem.setUrl(BaseConstants.IMPORT_BASE_URL + "r=p/d&id="
+                                   + searchGoodInfo.getGoodsid() + "&type=3");
+                resultList.add(picTextItem);
+            }
+            return resultList;
+        }
+        return null;
     }
 
     /**

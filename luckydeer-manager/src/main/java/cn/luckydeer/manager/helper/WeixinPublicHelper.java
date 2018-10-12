@@ -2,9 +2,6 @@ package cn.luckydeer.manager.helper;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,10 +26,8 @@ import cn.luckydeer.common.utils.email.EmailOrder;
 import cn.luckydeer.common.utils.wechat.WeixinOffAccountUtil;
 import cn.luckydeer.common.utils.wechat.model.WeixinPicTextItem;
 import cn.luckydeer.manager.cat.CatManager;
-import cn.luckydeer.model.cat.SearchGoodInfo;
+import cn.luckydeer.manager.movie.MovieManager;
 import cn.luckydeer.model.enums.WeixinMsgType;
-
-import com.alibaba.fastjson.JSON;
 
 /**
  * 微信工具类
@@ -45,6 +40,8 @@ public class WeixinPublicHelper {
     private static final Log logger = LogFactory.getLog("LUCKYDEER-WEIXIN-LOG");
 
     private CatManager       catManager;
+
+    private MovieManager     movieManager;
 
     /**
      * 
@@ -118,7 +115,7 @@ public class WeixinPublicHelper {
         //功能列表 1.搜索电影  2.搜索优惠券 3.添加电影
         if (StringUtils.contains(content, "电影")) {
             content = StringUtils.replace(content, "电影", "").trim();
-            List<WeixinPicTextItem> articles = getMovieInfo(content, fName, toName);
+            List<WeixinPicTextItem> articles = movieManager.getMovieInfo(content, fName, toName);
             if (CollectionUtils.isEmpty(articles)) {
                 return null;
             }
@@ -127,7 +124,7 @@ public class WeixinPublicHelper {
 
         if (StringUtils.contains(content, "优惠券")) {
             content = StringUtils.replace(content, "优惠券", "").trim();
-            List<WeixinPicTextItem> list = getSearchGoods(content);
+            List<WeixinPicTextItem> list = catManager.getSearchGoods(content);
             if (CollectionUtils.isEmpty(list)) {
                 return null;
             }
@@ -190,72 +187,6 @@ public class WeixinPublicHelper {
 
     /**
      * 
-     * 注解：搜索五个商品信息
-     * @return
-     * @author yuanxx @date 2018年9月28日
-     */
-    private List<WeixinPicTextItem> getSearchGoods(String keyWords) {
-
-        String result = catManager.searchGood(keyWords);
-        if (StringUtils.isNotBlank(result)) {
-            //将搜索结果转换为数组
-            List<SearchGoodInfo> goodList = JSON.parseArray(result, SearchGoodInfo.class);
-            if (CollectionUtils.isEmpty(goodList)) {
-                return null;
-            }
-            int fromIndex = 0;
-            //如果搜索结果查过五条 ，就查询前五条 否则提取前几个
-            int toIndex = goodList.size() > 5 ? 4 : goodList.size();
-            List<SearchGoodInfo> topList = goodList.subList(fromIndex, toIndex);
-            List<WeixinPicTextItem> resultList = new ArrayList<>();
-            WeixinPicTextItem picTextItem = null;
-            for (SearchGoodInfo searchGoodInfo : topList) {
-                picTextItem = new WeixinPicTextItem();
-                picTextItem.setDescription(searchGoodInfo.getQuan_jine() + "元优惠券，点击领取");
-                picTextItem.setPicUrl(searchGoodInfo.getPic());
-                picTextItem.setTitle(searchGoodInfo.getD_title());
-                picTextItem.setUrl(BaseConstants.IMPORT_BASE_URL + "r=p/d&id="
-                                   + searchGoodInfo.getGoodsid() + "&type=3");
-                resultList.add(picTextItem);
-            }
-            return resultList;
-        }
-        return null;
-    }
-
-    /**
-     * 
-     * 注解：搜索电影信息
-     * @param keyWord
-     * @param fName
-     * @param toName
-     * @return
-     * @author yuanxx @date 2018年9月28日
-     */
-    public List<WeixinPicTextItem> getMovieInfo(String keyWord, String fName, String toName) {
-
-        List<WeixinPicTextItem> list = new ArrayList<>();
-        WeixinPicTextItem picTextItem = new WeixinPicTextItem();
-        picTextItem.setTitle("影视《" + keyWord + "》已经找到，点击查看");
-        picTextItem.setPicUrl(BaseConstants.BASE_LOGO_URL);
-        picTextItem.setDescription("查看更多电影信息");
-
-        //拼接电影搜索网址
-        String urlString;
-        try {
-            urlString = BaseConstants.MOVIE_URL + "/index.php/vod/search.html?wd="
-                        + URLEncoder.encode(keyWord, "UTF-8");
-            picTextItem.setUrl(urlString);
-            list.add(picTextItem);
-            return list;
-        } catch (UnsupportedEncodingException e) {
-            logger.error("搜索电影失败", e);
-            return null;
-        }
-    }
-
-    /**
-     * 
      * 注解：异步发送邮件
      * @param emailOrder
      * @author yuanxx @date 2018年10月8日
@@ -267,5 +198,9 @@ public class WeixinPublicHelper {
 
     public void setCatManager(CatManager catManager) {
         this.catManager = catManager;
+    }
+
+    public void setMovieManager(MovieManager movieManager) {
+        this.movieManager = movieManager;
     }
 }

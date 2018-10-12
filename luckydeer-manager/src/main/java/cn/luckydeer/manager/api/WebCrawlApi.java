@@ -42,7 +42,7 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class WebCrawlApi {
 
-    private static Logger                 logger       = LoggerFactory.getLogger(WebCrawlApi.class);
+    private static final Logger           logger       = LoggerFactory.getLogger(WebCrawlApi.class);
 
     /** 网页抓取缓存 固定时间更新 避免多次抓取 节约资源  */
     private static Map<String, CacheData> webCrawCache = new ConcurrentHashMap<String, CacheData>();
