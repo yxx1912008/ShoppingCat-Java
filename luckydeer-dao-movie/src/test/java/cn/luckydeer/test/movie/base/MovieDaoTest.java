@@ -1,5 +1,7 @@
 package cn.luckydeer.test.movie.base;
 
+import java.util.List;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,20 @@ public class MovieDaoTest extends BaseTest {
         Integer vodId = 281;
         MacVodDo info = macVodDao.selectByPrimaryKey(vodId);
         System.out.println(ToStringBuilder.reflectionToString(info));
+    }
+
+    /**
+     * 
+     * 注解：查询最新添加入库的五个电影信息
+     * @throws Exception
+     * @author yuanxx @date 2018年10月12日
+     */
+    @Test
+    public void selectTopFiveMovie() throws Exception {
+        List<MacVodDo> list = macVodDao.selectTopFiveMovie();
+        for (MacVodDo macVodDo : list) {
+            System.out.println(ToStringBuilder.reflectionToString(macVodDo));
+        }
     }
 
 }

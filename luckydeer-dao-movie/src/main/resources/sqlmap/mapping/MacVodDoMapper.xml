@@ -23,4 +23,15 @@
 		where vod_id = #{vodId,jdbcType=INTEGER}
 	</select>
 
+	<!-- 选取数据库最新添加的五条电影信息 -->
+	<select id="selectTopFiveMovie" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM mac_vod
+		ORDER BY vod_time_add DESC
+		limit 5
+	</select>
+
+
+
 </mapper>
