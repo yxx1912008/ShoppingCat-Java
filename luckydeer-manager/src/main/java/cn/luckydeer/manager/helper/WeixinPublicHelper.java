@@ -16,18 +16,28 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.jboss.netty.handler.timeout.ReadTimeoutException;
+import org.jsoup.Connection.Response;
+import org.jsoup.Jsoup;
 import org.springframework.util.CollectionUtils;
 
 import cn.luckydeer.common.constants.base.BaseConstants;
+import cn.luckydeer.common.constants.cache.CaChePrefixConstants;
 import cn.luckydeer.common.constants.weixin.WeixinPublicConfig;
 import cn.luckydeer.common.utils.date.DateUtilSelf;
 import cn.luckydeer.common.utils.email.AliyunEmail;
 import cn.luckydeer.common.utils.email.EmailOrder;
 import cn.luckydeer.common.utils.wechat.WeixinOffAccountUtil;
 import cn.luckydeer.common.utils.wechat.model.WeixinPicTextItem;
+import cn.luckydeer.common.weixin.AccessToken;
+import cn.luckydeer.common.weixin.BaseWeixinDto;
 import cn.luckydeer.manager.cat.CatManager;
 import cn.luckydeer.manager.movie.MovieManager;
+import cn.luckydeer.memcached.api.DistributedCached;
+import cn.luckydeer.memcached.enums.CachedType;
 import cn.luckydeer.model.enums.WeixinMsgType;
+
+import com.alibaba.fastjson.JSON;
 
 /**
  * 微信工具类
@@ -37,11 +47,64 @@ import cn.luckydeer.model.enums.WeixinMsgType;
  */
 public class WeixinPublicHelper {
 
-    private static final Log logger = LogFactory.getLog("LUCKYDEER-WEIXIN-LOG");
+    private static final Log  logger = LogFactory.getLog("LUCKYDEER-WEIXIN-LOG");
 
-    private CatManager       catManager;
+    private CatManager        catManager;
 
-    private MovieManager     movieManager;
+    private MovieManager      movieManager;
+
+    private DistributedCached distributedCached;
+
+    /**
+     * 
+     * 注解：获取微信 AccessToken
+     * @return
+     * @author yuanxx @date 2018年10月12日
+     */
+    public String getAccessToken() {
+        String access_token = (String) distributedCached.get(CachedType.STATISTICS,
+            CaChePrefixConstants.WEIXIN_PUBLIC_ACCESS_TOKEN);
+        if (StringUtils.isBlank(access_token)) {
+            access_token = getNewAccessToken();
+            flushAccessToken(access_token);
+            return access_token;
+        }
+        return access_token;
+    }
+
+    /**
+     * 
+     * 注解：刷新 微信 access_token 并放入缓存
+     * @author yuanxx @date 2018年9月26日
+     */
+    public void flushAccessToken(String accessToken) {
+        distributedCached.put(CachedType.STATISTICS,
+            CaChePrefixConstants.WEIXIN_PUBLIC_ACCESS_TOKEN, 2 * 60 * 60, accessToken);
+    }
+
+    /**
+     * 注解：获取微信公众号 全局唯一调用凭据(access_token)
+     * @author yuanxx @date 2018年9月26日
+     * @return 
+     */
+    public String getNewAccessToken() {
+        String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="
+                     + WeixinPublicConfig.APP_ID + "&secret=" + WeixinPublicConfig.APP_SECRET;
+
+        String result = getHttpResult(url);
+
+        if (StringUtils.isBlank(result)) {
+            logger.error("微信公众号获取access_token失败");
+            return null;
+        }
+        AccessToken accessToken = JSON.parseObject(result, AccessToken.class);
+        if (StringUtils.isBlank(accessToken.getErrcode())) {
+            return accessToken.getAccess_token();
+        } else {
+            logger.error("微信公众号获取access_token失败");
+            return null;
+        }
+    }
 
     /**
      * 
@@ -196,11 +259,53 @@ public class WeixinPublicHelper {
         AliyunEmail.send(emailOrder);
     }
 
+    /**
+     * 
+     * 注解：连接微信服务器 获取access_token
+     * @param url
+     * @return
+     * @author yuanxx @date 2018年10月12日
+     */
+    public static String getHttpResult(String url) {
+
+        String result = null;
+        BaseWeixinDto object = new BaseWeixinDto();
+        try {
+            Response res = Jsoup.connect(url).ignoreContentType(true)
+                .timeout(BaseConstants.DEFAULT_TIME_OUT).execute();
+            if (res.statusCode() == 200) {
+                result = res.body();
+                System.out.println(result);
+            } else {
+                object.setErrcode("000001");
+                result = "{\"errorcode\":\"000001\",\"errmsg\":\"" + res.statusMessage().toString()
+                         + "\"}";
+            }
+            return result;
+        } catch (IOException e) {
+            logger.error("获取access_token失败", e);
+            return result = "{\"errorcode\":\"000001\",\"errmsg\":\"" + e.getMessage() + "\"}";
+        } catch (ReadTimeoutException e) {
+            logger.error("获取access_token联网超时", e);
+            return result = "{\"errorcode\":\"000001\",\"errmsg\":\"" + e.getMessage() + "\"}";
+        }
+    }
+
     public void setCatManager(CatManager catManager) {
         this.catManager = catManager;
     }
 
     public void setMovieManager(MovieManager movieManager) {
         this.movieManager = movieManager;
+    }
+
+    public void setDistributedCached(DistributedCached distributedCached) {
+        this.distributedCached = distributedCached;
+    }
+
+    public static void main(String[] args) {
+        String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="
+                     + WeixinPublicConfig.APP_ID + "&secret=" + WeixinPublicConfig.APP_SECRET;
+        WeixinPublicHelper.getHttpResult(url);
     }
 }

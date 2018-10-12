@@ -8,7 +8,10 @@ package cn.luckydeer.common.constants.cache;
  */
 public interface CaChePrefixConstants {
 
-    /*购物猫 商品详情 图片缓存*/
-    String GOOD_IMG_CACHE = "GOOD_IMG_CACHE";
+    /**购物猫 商品详情 图片缓存*/
+    String GOOD_IMG_CACHE             = "GOOD_IMG_CACHE";
+
+    /** 微信公众号  ACCESS_TOKEN 缓存前缀 */
+    String WEIXIN_PUBLIC_ACCESS_TOKEN = "WEIXIN_PUBLIC_ACCESS_TOKEN_";
 
 }
