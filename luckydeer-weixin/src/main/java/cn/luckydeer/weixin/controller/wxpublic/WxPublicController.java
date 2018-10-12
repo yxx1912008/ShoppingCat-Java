@@ -16,6 +16,7 @@ import cn.luckydeer.common.constants.weixin.WeixinPublicConfig;
 import cn.luckydeer.common.utils.encrypt.EncryptUtil;
 import cn.luckydeer.common.utils.wechat.WeixinOffAccountUtil;
 import cn.luckydeer.manager.helper.WeixinPublicHelper;
+import cn.luckydeer.manager.movie.MovieManager;
 
 /**
  * 微信公众号处理
@@ -28,6 +29,9 @@ import cn.luckydeer.manager.helper.WeixinPublicHelper;
 public class WxPublicController {
 
     private static final Log   logger = LogFactory.getLog(WxPublicController.class);
+
+    @Autowired
+    private MovieManager       movieManager;
 
     @Autowired
     private WeixinPublicHelper weixinPublicHelper;
