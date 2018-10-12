@@ -275,7 +275,6 @@ public class WeixinPublicHelper {
                 .timeout(BaseConstants.DEFAULT_TIME_OUT).execute();
             if (res.statusCode() == 200) {
                 result = res.body();
-                System.out.println(result);
             } else {
                 object.setErrcode("000001");
                 result = "{\"errorcode\":\"000001\",\"errmsg\":\"" + res.statusMessage().toString()
