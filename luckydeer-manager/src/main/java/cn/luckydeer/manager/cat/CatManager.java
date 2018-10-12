@@ -137,16 +137,7 @@ public class CatManager {
         ExecutorServiceUtils.getExcutorPools().execute(new Runnable() {
             @Override
             public void run() {
-                String ip = request.getHeader("x-forwarded-for");
-                if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                    ip = request.getHeader("Proxy-Client-IP");
-                }
-                if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                    ip = request.getHeader("WL-Proxy-Client-IP");
-                }
-                if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                    ip = request.getRemoteAddr();
-                }
+                String ip = request.getRemoteAddr();
                 EmailOrder emailOrder = new EmailOrder();
                 emailOrder.setContent("有用户主动领取商品优惠券,时间:"
                                       + DateUtilSelf.simpleFormat(new Date())
