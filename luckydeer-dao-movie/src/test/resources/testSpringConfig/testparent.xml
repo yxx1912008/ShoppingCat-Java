@@ -11,23 +11,18 @@
 	<!-- ============================================================================ -->
 	<!-- ============================ DataSource配置 =============================== -->
 	<!-- ============================================================================ -->
+	<context:annotation-config />
 
-	<!-- junit测试使用相对路径： <value>classpath*:domain.properties</value> <value>classpath*:acaomeidb.properties</value> 
-		<value>classpath*:a3userdb.properties</value> tomcat启动可以使用绝对路径，在tomcat|eclipse目录下建立db目录存放db.properties 
-		<value>file:../db/acaomeidb.properties</value> <value>file:../domain/domain.properties</value> 
-		tomcat目录: <value>file:${catalina.home}/db/acaomeidb.properties</value> <value>file:${catalina.home}/domain/domain.properties</value> -->
+	<!-- junit测试使用相对路径： <value>classpath*:domain.properties</value> -->
 
-	<!-- 最初是要类名填写 PropertyPlaceholderConfigurer类，后期为了全局使用properties变量，改为继承此类 -->
-	<bean id="propertyConfigurer" class="cn.luckydeer.common.utils.CustomizedProperty">
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<!-- 多数据源配置 -->
 		<property name="ignoreUnresolvablePlaceholders" value="true" />
 		<property name="locations">
 			<list>
-				<value>file:${catalina.home}/db/luckydeer-db.properties</value>
-				<value>file:${catalina.home}/domain/luckydeerDomain.properties</value>
-				<value>file:${catalina.home}/db/luckydeer-movie-db.properties</value>
+				<value>classpath:testDbConfig/luckydeer-movie-db.properties</value>
 			</list>
 		</property>
 	</bean>
-
 </beans>

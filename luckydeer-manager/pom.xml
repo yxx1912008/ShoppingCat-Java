@@ -17,6 +17,12 @@
 
 		<dependency>
 			<groupId>cn.luckydeer</groupId>
+			<artifactId>luckydeer-dao-movie</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>cn.luckydeer</groupId>
 			<artifactId>luckydeer-memcached</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>

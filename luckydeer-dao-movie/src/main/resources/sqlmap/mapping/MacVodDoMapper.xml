@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.luckydeer.movie.dao.movie.daoImpl.MacVodDao">
+	<resultMap id="BaseResultMap"
+		type="cn.luckydeer.movie.dao.movie.dataobject.MacVodDo">
+		<id column="vod_id" property="vodId" jdbcType="INTEGER" />
+		<result column="vod_name" property="vodName" jdbcType="VARCHAR" />
+		<result column="vod_class" property="vodClass" jdbcType="VARCHAR" />
+		<result column="vod_pic" property="vodPic" jdbcType="VARCHAR" />
+		<result column="vod_score" property="vodScore" jdbcType="DECIMAL" />
+		<result column="vod_time_add" property="vodTimeAdd" jdbcType="INTEGER" />
+		<result column="vod_content" property="vodContent" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		vod_id,vod_name,vod_class,vod_pic,vod_score,vod_time_add,vod_content
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from mac_vod
+		where vod_id = #{vodId,jdbcType=INTEGER}
+	</select>
+
+</mapper>

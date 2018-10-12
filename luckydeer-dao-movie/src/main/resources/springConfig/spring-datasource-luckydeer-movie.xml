@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+	default-autowire="byName">
+
+	<!-- ============================================================================ -->
+	<!-- ============================ DataSource配置 =============================== -->
+	<!-- ============================================================================ -->
+
+	<!-- 数据源 -->
+	<bean id="luckyDeerMovieDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName">
+			<value>${db.luckydeer.movie.mysql.driver}</value>
+		</property>
+		<property name="url">
+			<value>${db.luckydeer.movie.url.prod}</value>
+		</property>
+		<property name="username">
+			<value>${db.luckydeer.movie.username}</value>
+		</property>
+		<property name="password">
+			<value>${db.luckydeer.movie.password}</value>
+		</property>
+		<property name="defaultAutoCommit">
+			<value>${db.luckydeer.movie.defaultAutoCommit}</value>
+		</property>
+		<!-- 同时连接最大数 -->
+		<property name="maxActive">
+			<value>${db.luckydeer.movie.maxActive}</value>
+		</property>
+		<!-- 连接池空闲时保持的最大连接数 -->
+		<property name="maxIdle">
+			<value>${db.luckydeer.movie.maxIdle}</value>
+		</property>
+		<!-- 当没有可用连接是等待最长时间 毫秒 -->
+		<property name="maxWait">
+			<value>${db.luckydeer.movie.maxWait}</value>
+		</property>
+	</bean>
+
+
+	<bean id="luckyDeerMovieSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="luckyDeerMovieDataSource" />
+		<!-- 数据库配置文件路径 -->
+		<property name="configLocation" value="classpath:sqlmap/sqlmap-luckydeer-movie.xml" />
+	</bean>
+
+	<bean id="luckyDeerMovieAbstractDAO" abstract="true">
+		<property name="sqlSessionFactory" ref="luckyDeerMovieSqlSessionFactory" />
+	</bean>
+	<!-- ============================================================================ -->
+	<!-- ================== TransactionTemplate和TransactionManager配置 ============== -->
+	<!-- ============================================================================ -->
+
+	<bean id="luckyDeerMovieTransactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource">
+			<ref bean="luckyDeerMovieDataSource" />
+		</property>
+	</bean>
+
+	<!-- 事物模板 -->
+	<bean id="luckyDeerMovieTransactionTemplate"
+		class="org.springframework.transaction.support.TransactionTemplate">
+		<property name="transactionManager">
+			<ref bean="luckyDeerMovieTransactionManager" />
+		</property>
+	</bean>
+
+</beans>
