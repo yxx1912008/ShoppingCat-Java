@@ -202,7 +202,7 @@ public class WeixinPublicHelper {
             picTextItem.setUrl(BaseConstants.IMPORT_BASE_URL + "r=index%2Fsearch&s_type=1&kw="
                                + content);
             msgList.add(picTextItem);
-            return WeixinOffAccountUtil.sendTextAndPic(fName, toName, list);
+            return WeixinOffAccountUtil.sendTextAndPic(fName, toName, msgList);
         }
         //添加电影
         if (StringUtils.contains(content, "添加")) {
