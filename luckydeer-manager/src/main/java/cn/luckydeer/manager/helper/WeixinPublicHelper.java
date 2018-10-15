@@ -2,6 +2,7 @@ package cn.luckydeer.manager.helper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -187,6 +188,7 @@ public class WeixinPublicHelper {
 
         if (StringUtils.contains(content, "优惠券")) {
             content = StringUtils.replace(content, "优惠券", "").trim();
+            List<WeixinPicTextItem> msgList = new ArrayList<>();
             List<WeixinPicTextItem> list = catManager.getSearchGoods(content);
             String picUrl = BaseConstants.BASE_LOGO_URL;
             if (!CollectionUtils.isEmpty(list)) {
@@ -199,9 +201,8 @@ public class WeixinPublicHelper {
             picTextItem.setDescription("查看更多优惠商品");
             picTextItem.setUrl(BaseConstants.IMPORT_BASE_URL + "r=index%2Fsearch&s_type=1&kw="
                                + content);
-            list.add(picTextItem);
-            String resultString = WeixinOffAccountUtil.sendTextAndPic(fName, toName, list);
-            return resultString;
+            msgList.add(picTextItem);
+            return WeixinOffAccountUtil.sendTextAndPic(fName, toName, list);
         }
         //添加电影
         if (StringUtils.contains(content, "添加")) {
