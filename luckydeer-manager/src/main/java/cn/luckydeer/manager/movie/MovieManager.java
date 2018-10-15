@@ -5,7 +5,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -45,27 +44,15 @@ public class MovieManager {
 
         List<WeixinPicTextItem> list = new ArrayList<>();
         List<MacVodDo> movieList = selectTopFiveMovie(keyWord);
+        String picUrl = BaseConstants.BASE_LOGO_URL;
         if (!CollectionUtils.isEmpty(movieList)) {
-            WeixinPicTextItem movieItem = null;
-            String url = BaseConstants.MOVIE_URL + "/index.php/vod/detail/id/";
-            for (MacVodDo macVodDo : movieList) {
-                movieItem = new WeixinPicTextItem();
-                movieItem.setTitle(macVodDo.getVodName());
-                movieItem.setDescription(macVodDo.getVodContent());
-                String pic = macVodDo.getVodPic();
-                //如果地址里包含 前缀 替换前缀
-                if (StringUtils.contains(macVodDo.getVodPic(), "pic.php?pic=")) {
-                    pic = StringUtils.replace(pic, "pic.php?pic=", "http://");
-                }
-                movieItem.setPicUrl(pic);
-                movieItem.setUrl(url + macVodDo.getVodId() + ".html");
-                list.add(movieItem);
-            }
+            //因为微信后台修改自动回复消息策略，故自动回复只显示一条消息
+            picUrl = movieList.get(0).getVodPic();
         }
 
         WeixinPicTextItem picTextItem = new WeixinPicTextItem();
         picTextItem.setTitle("影视《" + keyWord + "》已经找到，点击查看更多信息");
-        picTextItem.setPicUrl(BaseConstants.BASE_LOGO_URL);
+        picTextItem.setPicUrl(picUrl);
         picTextItem.setDescription("查看更多电影信息");
 
         //拼接电影搜索网址

@@ -188,13 +188,14 @@ public class WeixinPublicHelper {
         if (StringUtils.contains(content, "优惠券")) {
             content = StringUtils.replace(content, "优惠券", "").trim();
             List<WeixinPicTextItem> list = catManager.getSearchGoods(content);
-            if (CollectionUtils.isEmpty(list)) {
-                return null;
+            String picUrl = BaseConstants.BASE_LOGO_URL;
+            if (!CollectionUtils.isEmpty(list)) {
+                picUrl = list.get(0).getPicUrl();
             }
             //最下面的 点击查看更多
             WeixinPicTextItem picTextItem = new WeixinPicTextItem();
-            picTextItem.setTitle("点击查看更多优惠商品");
-            picTextItem.setPicUrl(BaseConstants.BASE_LOGO_URL);
+            picTextItem.setTitle("优惠券已找到,点击领取优惠券");
+            picTextItem.setPicUrl(picUrl);
             picTextItem.setDescription("查看更多优惠商品");
             picTextItem.setUrl(BaseConstants.IMPORT_BASE_URL + "r=index%2Fsearch&s_type=1&kw="
                                + content);
