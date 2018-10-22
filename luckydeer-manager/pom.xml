@@ -31,5 +31,6 @@
 			<artifactId>luckydeer-webmagic</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<!-- 增加自动生成模板依赖 -->
 	</dependencies>
 </project>
