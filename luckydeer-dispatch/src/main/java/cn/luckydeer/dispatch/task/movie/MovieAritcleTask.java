@@ -19,7 +19,7 @@ public class MovieAritcleTask {
 
     public void run() {
         logger.info("开始自动生成 订阅号文章");
-        //movieManager.getAirtcleInfo();
+        movieManager.getAirtcleInfo();
     }
 
     public void setMovieManager(MovieManager movieManager) {
