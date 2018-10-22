@@ -18,6 +18,8 @@
 				<ref bean="catRequestTaskTrigger" />
 				<!-- 电影自动更新 -->
 				<ref bean="movieTaskTrigger" />
+				<!-- 电影推荐文章自动生成 -->
+				<ref bean="movieAritcleTaskTrigger" />
 			</list>
 		</property>
 	</bean>

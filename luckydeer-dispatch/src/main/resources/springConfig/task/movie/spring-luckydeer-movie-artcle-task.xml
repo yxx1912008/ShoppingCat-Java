@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	<!-- ============================================================================ -->
+	<!-- ============================ 调度任务触发器配置 =============================== -->
+	<!-- ============================================================================ -->
+
+	<bean id="movieAritcleTask" class="cn.luckydeer.dispatch.task.movie.MovieAritcleTask" />
+
+	<!-- 2.封装的任务详细工厂类 -->
+	<bean id="movieAritcleJobDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 具体触发任务对象 -->
+		<property name="targetObject">
+			<ref bean="movieAritcleTask" />
+		</property>
+		<!-- 配置方法 -->
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<!-- 默认容许并发；不容许并发,会延迟执行 -->
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<!-- 3.触发时间类 ======================== -->
+	<bean id="movieAritcleTaskTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<!-- jobDetail：Spring封装的任务详细工厂类 -->
+		<property name="jobDetail">
+			<ref bean="movieAritcleJobDetail" />
+		</property>
+		<!-- 触发时间表达式 -->
+		<property name="cronExpression">
+			<!-- 表达式的时间规则：每三天执行一次 -->
+			<value>0 0 0 1/3 * ?  </value>
+		</property>
+	</bean>
+</beans>
