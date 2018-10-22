@@ -10,9 +10,12 @@
 		<result column="vod_score" property="vodScore" jdbcType="DECIMAL" />
 		<result column="vod_time_add" property="vodTimeAdd" jdbcType="INTEGER" />
 		<result column="vod_content" property="vodContent" jdbcType="LONGVARCHAR" />
+		<result column="vod_actor" property="vodActor" jdbcType="LONGVARCHAR" />
+		<result column="vod_area" property="vodArea" jdbcType="VARCHAR" />
+		<result column="vod_year" property="vodYear" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		vod_id,vod_name,vod_class,vod_pic,vod_score,vod_time_add,vod_content
+		vod_id,vod_name,vod_class,vod_pic,vod_score,vod_time_add,vod_content,vod_actor,vod_area,vod_year
 	</sql>
 
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"

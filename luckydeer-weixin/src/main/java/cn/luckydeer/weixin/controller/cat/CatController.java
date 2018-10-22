@@ -19,6 +19,7 @@ import cn.luckydeer.common.enums.view.ViewShowEnums;
 import cn.luckydeer.common.model.ResponseObj;
 import cn.luckydeer.dao.cat.dataobject.WxAppStatusDo;
 import cn.luckydeer.manager.cat.CatManager;
+import cn.luckydeer.manager.movie.MovieManager;
 
 /**
  * 首页海报控制类
@@ -31,7 +32,10 @@ import cn.luckydeer.manager.cat.CatManager;
 public class CatController {
 
     @Autowired
-    private CatManager catManager;
+    private CatManager   catManager;
+
+    @Autowired
+    private MovieManager movieManager;
 
     /**
      * 
@@ -274,6 +278,7 @@ public class CatController {
     @ResponseBody
     public String clearCache(HttpServletRequest request, HttpServletResponse response) {
         catManager.clearCache();
+        movieManager.getAirtcleInfo();
         return new ResponseObj().toJson(request, response);
     }
 

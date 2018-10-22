@@ -24,6 +24,12 @@ public class MacVodDo {
 
     private String     vodContent; //电影内容
 
+    private String     vodActor;  //演员表
+
+    private String     vodArea;   //电影区域
+
+    private String     vodYear;    //电影年份
+
     public Integer getVodId() {
         return vodId;
     }
@@ -78,6 +84,30 @@ public class MacVodDo {
 
     public void setVodContent(String vodContent) {
         this.vodContent = vodContent;
+    }
+
+    public String getVodActor() {
+        return vodActor;
+    }
+
+    public void setVodActor(String vodActor) {
+        this.vodActor = vodActor;
+    }
+
+    public String getVodArea() {
+        return vodArea;
+    }
+
+    public void setVodArea(String vodArea) {
+        this.vodArea = vodArea;
+    }
+
+    public String getVodYear() {
+        return vodYear;
+    }
+
+    public void setVodYear(String vodYear) {
+        this.vodYear = vodYear;
     }
 
 }
