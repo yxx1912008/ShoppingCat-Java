@@ -36,7 +36,7 @@
 			and vod_name like
 			CONCAT('%',#{keyWords,jdbcType=VARCHAR},'%')
 		</if>
-		ORDER BY vod_time_add DESC
+		ORDER BY vod_time DESC
 		limit 5
 	</select>
 
