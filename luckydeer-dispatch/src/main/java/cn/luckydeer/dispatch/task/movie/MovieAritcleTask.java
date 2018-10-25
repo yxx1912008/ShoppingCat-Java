@@ -2,6 +2,7 @@ package cn.luckydeer.dispatch.task.movie;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.luckydeer.manager.movie.MovieManager;
 
@@ -15,15 +16,12 @@ public class MovieAritcleTask {
 
     private static final Log logger = LogFactory.getLog("LUCKYDEER-TASK-LOG");
 
+    @Autowired
     private MovieManager     movieManager;
 
     public void run() {
         logger.info("开始自动生成 订阅号文章");
         movieManager.getAirtcleInfo();
-    }
-
-    public void setMovieManager(MovieManager movieManager) {
-        this.movieManager = movieManager;
     }
 
 }
