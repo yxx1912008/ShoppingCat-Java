@@ -85,7 +85,6 @@ public class WxPublicController {
     @RequestMapping(value = "/wxAuthen.do", produces = "application/json;charset=utf-8", method = RequestMethod.POST)
     public void wxAuthenPost(HttpServletResponse response, HttpServletRequest request) {
         // POST模式，微信用户消息处理
-        //TODO yxx 微信用户消息处理
         try {
             String message = weixinPublicHelper.handleWeixin(request, response);
             if (StringUtils.isNotEmpty(message)) {
