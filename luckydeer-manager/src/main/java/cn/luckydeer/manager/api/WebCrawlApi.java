@@ -509,35 +509,6 @@ public class WebCrawlApi {
 
     /**
      * 
-     * 注解：通过商品的真实Id(淘宝内部Id)获取商品的主图信息
-     * 2018年10月8日 09:57:54
-     * 淘宝关闭获取主图渠道 此接口废弃
-     * @param realGoodId
-     * @return
-     * @author yuanxx @date 2018年9月13日
-     */
-    @Deprecated
-    public static String getGoodDescImg(String realGoodId) {
-
-        JSONObject param = new JSONObject();
-        param.put("item_num_id", realGoodId);
-
-        //拼接请求参数
-        StringBuilder builder = new StringBuilder(BaseConstants.TAOBAO_FOOD_IMG);
-        builder.append("data=").append(param.toJSONString()).append("&type=json");
-        String url = builder.toString();
-        try {
-            Document doc = Jsoup.connect(url).ignoreContentType(true).get();
-            String result = doc.text();
-            return result;
-        } catch (IOException e) {
-            logger.error("读取淘宝商品主图信息失败", e);
-            return null;
-        }
-    }
-
-    /**
-     * 
      * 注解：新版本获取主图信息是 
      * @param realGoodId
      * @return

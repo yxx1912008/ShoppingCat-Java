@@ -19,9 +19,6 @@ public interface BaseConstants {
     //关键站点根地址
     String   IMPORT_BASE_URL    = "http://cat.gouwumao.top/index.php?";
 
-    //淘宝商品主图信息接口
-    String   TAOBAO_FOOD_IMG    = "http://hws.m.taobao.com/cache/mtop.wdetail.getItemDescx/4.1/?";
-
     //默认请求超时时间
     int      DEFAULT_TIME_OUT   = 6000;
 
