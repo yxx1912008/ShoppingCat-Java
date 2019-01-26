@@ -11,6 +11,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
@@ -25,6 +27,8 @@ import cn.luckydeer.common.constants.cache.CaChePrefixConstants;
 import cn.luckydeer.common.utils.cache.CacheData;
 import cn.luckydeer.common.utils.date.DateUtilSelf;
 import cn.luckydeer.common.utils.thread.ExecutorServiceUtils;
+import cn.luckydeer.dao.cat.daoInterface.ISysOptionsDao;
+import cn.luckydeer.dao.cat.dataobject.SysOptionsDo;
 import cn.luckydeer.memcached.api.DistributedCached;
 import cn.luckydeer.memcached.enums.CachedType;
 import cn.luckydeer.model.banner.BannerModel;
@@ -53,6 +57,16 @@ public class WebCrawlApi {
 
     private DistributedCached             distributedCached;
 
+    private ISysOptionsDao                sysOptionsDao;
+
+    private static String                 baseUrl;
+
+    @PostConstruct
+    private void init() {
+        SysOptionsDo record = sysOptionsDao.selectByPrimaryKey(2);
+        baseUrl = record.getOptionValue();
+    }
+
     /**
      * 
      * 注解：获取首页海报
@@ -66,11 +80,11 @@ public class WebCrawlApi {
             CacheData cache = webCrawCache.get(key);
             return (List<BannerModel>) cache.getData();
         }
+
         //请求海报信息
         Document doc;
         try {
-            doc = Jsoup.connect(BaseConstants.MAIN_BASE_URL)
-                .timeout(BaseConstants.DEFAULT_TIME_OUT).get();
+            doc = Jsoup.connect(baseUrl).timeout(BaseConstants.DEFAULT_TIME_OUT).get();
             Elements elements = doc.getElementsByClass("swiper-slide");
             Iterator<Element> it = elements.iterator();
             BannerModel model = null;
@@ -154,8 +168,8 @@ public class WebCrawlApi {
         }
         Document doc;
         try {
-            doc = Jsoup.connect(BaseConstants.MAIN_BASE_URL + "r=ddq/wap")
-                .timeout(BaseConstants.DEFAULT_TIME_OUT).get();
+            doc = Jsoup.connect(baseUrl + "r=ddq/wap").timeout(BaseConstants.DEFAULT_TIME_OUT)
+                .get();
             String rexString = "data = (.*?);";
             Pattern pattern = Pattern.compile(rexString);
             Matcher m = pattern.matcher(doc.toString());
@@ -181,7 +195,7 @@ public class WebCrawlApi {
     public static String getNine(String page) {
 
         //拼接请求参数
-        StringBuilder builder = new StringBuilder(BaseConstants.MAIN_BASE_URL);
+        StringBuilder builder = new StringBuilder(baseUrl);
         builder.append("r=nine/listajax&n_id=58&page=").append(page).append("&cac_id=");
         if (StringUtils.isNotBlank(nine_cac_id)) {
             builder.append(nine_cac_id);
@@ -220,7 +234,7 @@ public class WebCrawlApi {
             CacheData cache = webCrawCache.get(key);
             return (String) cache.getData();
         }
-        String url = BaseConstants.MAIN_BASE_URL + "r=realtime/wapajax&cid=" + catId;
+        String url = baseUrl + "r=realtime/wapajax&cid=" + catId;
         try {
             Document doc = Jsoup.connect(url).timeout(BaseConstants.DEFAULT_TIME_OUT).get();
             String result = doc.text();
@@ -242,7 +256,7 @@ public class WebCrawlApi {
      */
     public static String searchGood(String keyWords) {
 
-        StringBuilder builder = new StringBuilder(BaseConstants.MAIN_BASE_URL);
+        StringBuilder builder = new StringBuilder(baseUrl);
         builder.append("r=index%2Fsearch&s_type=1&kw=");
         builder.append(keyWords);
         try {
@@ -424,7 +438,7 @@ public class WebCrawlApi {
     public static String getTicketLive(String page) {
 
         //拼接请求参数
-        StringBuilder builder = new StringBuilder(BaseConstants.MAIN_BASE_URL);
+        StringBuilder builder = new StringBuilder(baseUrl);
         if (StringUtils.equals("1", page)) {
             live_cac_id = "";
         }
@@ -463,8 +477,8 @@ public class WebCrawlApi {
         }
         Document doc;
         try {
-            doc = Jsoup.connect(BaseConstants.MAIN_BASE_URL + "r=index/wap")
-                .timeout(BaseConstants.DEFAULT_TIME_OUT).get();
+            doc = Jsoup.connect(baseUrl + "r=index/wap").timeout(BaseConstants.DEFAULT_TIME_OUT)
+                .get();
             //使用正则匹配 （非贪婪模式）
             String rexString = "indexWillBring\",\"data\":(.*?),\"mta_name\"";
             Pattern pattern = Pattern.compile(rexString);
@@ -523,6 +537,10 @@ public class WebCrawlApi {
 
     public void setDistributedCached(DistributedCached distributedCached) {
         this.distributedCached = distributedCached;
+    }
+
+    public void setSysOptionsDao(ISysOptionsDao sysOptionsDao) {
+        this.sysOptionsDao = sysOptionsDao;
     }
 
     public static void main(String[] args) throws Exception {
