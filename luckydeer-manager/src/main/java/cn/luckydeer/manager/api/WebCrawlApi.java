@@ -311,6 +311,7 @@ public class WebCrawlApi {
             Pattern pattern = Pattern.compile(rexString);
             Matcher m = pattern.matcher(doc.toString());
             if (m.find()) {
+
                 final JSONObject jsonObject = JSON.parseObject(m.group(1).trim());
                 jsonObject.put("shopName", shopName);
                 jsonObject.put("shopIcon", shopIcon);
@@ -555,7 +556,7 @@ public class WebCrawlApi {
 
     public static void main(String[] args) throws Exception {
 
-        String goodId = "16603939";
+        String goodId = "18226643";
         WebCrawlApi webCrawlApi = new WebCrawlApi();
         System.out.println(webCrawlApi.getGoodDetailNew(goodId));
     }
