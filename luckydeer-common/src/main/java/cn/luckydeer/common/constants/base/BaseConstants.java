@@ -23,6 +23,7 @@ public interface BaseConstants {
     int      DEFAULT_TIME_OUT   = 6000;
 
     //大淘客网站内部ID
+    //TODO yxx 暂时没有用到
     String   DATAOKE_USER_ID    = "675425";
 
     //默认缓存更新时间
@@ -32,7 +33,7 @@ public interface BaseConstants {
     String   DTK_MAIN_URL       = "http://api.dataoke.com/index.php?";
 
     //小程序 数据请求 基础地、地址
-    String   WX_BASE_API_URL    = "https://api.luckydeer.cn/";
+    String   WX_BASE_API_URL    = "https://api.gouwumao.top/";
 
     //购物猫logo地址
     String   BASE_LOGO_URL      = "http://api.luckydeer.cn/static/cat/logo.png";

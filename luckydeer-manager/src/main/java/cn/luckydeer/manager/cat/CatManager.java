@@ -23,7 +23,9 @@ import cn.luckydeer.common.utils.email.EmailOrder;
 import cn.luckydeer.common.utils.http.HttpClientSend;
 import cn.luckydeer.common.utils.thread.ExecutorServiceUtils;
 import cn.luckydeer.common.utils.wechat.model.WeixinPicTextItem;
+import cn.luckydeer.dao.cat.daoInterface.ISysOptionsDao;
 import cn.luckydeer.dao.cat.daoInterface.IWxAppStatusDao;
+import cn.luckydeer.dao.cat.dataobject.SysOptionsDo;
 import cn.luckydeer.dao.cat.dataobject.WxAppStatusDo;
 import cn.luckydeer.manager.api.WebCrawlApi;
 import cn.luckydeer.model.banner.BannerModel;
@@ -46,6 +48,8 @@ public class CatManager {
     private static Map<String, CacheData> cache  = new ConcurrentHashMap<String, CacheData>();
 
     private IWxAppStatusDao               wxAppStatusDao;
+
+    private ISysOptionsDao                sysOptionsDao;
 
     private WebCrawlApi                   webCrawlApi;
 
@@ -248,7 +252,8 @@ public class CatManager {
         WxAppStatusDo info = wxAppStatusDao.selectByPrimaryKey(versionId);
 
         if (null != info) {
-            info.setBaseUrl(BaseConstants.WX_BASE_API_URL);
+            String apiUrl = getApiUrl();
+            info.setBaseUrl(apiUrl);
             updateCache(info, key);
         }
 
@@ -321,12 +326,30 @@ public class CatManager {
         WebCrawlApi.clearCache();
     }
 
+    /**
+     * 
+     * 注解：
+     * @return
+     * @author yuanxx @date 2019年1月26日
+     */
+    private String getApiUrl() {
+        SysOptionsDo record = sysOptionsDao.selectByPrimaryKey(1);
+        if (null == record) {
+            return BaseConstants.WX_BASE_API_URL;
+        }
+        return record.getOptionValue();
+    }
+
     public void setWxAppStatusDao(IWxAppStatusDao wxAppStatusDao) {
         this.wxAppStatusDao = wxAppStatusDao;
     }
 
     public void setWebCrawlApi(WebCrawlApi webCrawlApi) {
         this.webCrawlApi = webCrawlApi;
+    }
+
+    public void setSysOptionsDao(ISysOptionsDao sysOptionsDao) {
+        this.sysOptionsDao = sysOptionsDao;
     }
 
 }

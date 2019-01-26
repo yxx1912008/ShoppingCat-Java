@@ -25,5 +25,8 @@
 	<bean id="wxAppStatusDao" class="cn.luckydeer.dao.cat.daoImpl.WxAppStatusDao"
 		parent="luckyDeerAbstractDAO" />
 
+	<!-- 默认系统配置 -->
+	<bean id="sysOptionsDao" class="cn.luckydeer.dao.cat.daoImpl.SysOptionsDao"
+		parent="luckyDeerAbstractDAO" />
 
 </beans>
