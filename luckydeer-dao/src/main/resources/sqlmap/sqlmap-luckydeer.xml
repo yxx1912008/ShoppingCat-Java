@@ -35,6 +35,7 @@
 		<mapper resource="sqlmap/mapping/CatIndexPosterDoMapper.xml"/>
 		
 		<mapper resource="sqlmap/mapping/WxAppStatusDoMapper.xml"/>
+		<mapper resource="sqlmap/mapping/SysOptionsDoMapper.xml"/>
 		
 	</mappers>
 </configuration>
